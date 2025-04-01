@@ -88,18 +88,19 @@ h1, h2 {
     transition: background-color 0.3s ease, border-color 0.3s ease;
     display: flex;
     flex-direction: column; /* Stack elements vertically */
+    animation: blockAppear 0.5s ease-out;
 }
 
 .block.mined {
     background-color: #e9f7ec; /* Light green for mined */
     border-color: #a3d8b0;
+    animation: chainUpdate 0.5s ease;
 }
 
 .block.invalid {
     background-color: #f8d7da; /* Light red for invalid hash */
     border-color: #f5c6cb;
 }
-
 
 .block-header {
     font-weight: bold;
@@ -152,6 +153,13 @@ h1, h2 {
      font-weight: bold;
 }
 
+.block .hash-value {
+    transition: all 0.3s ease;
+}
+
+.block .hash-value.updating {
+    animation: hashUpdate 0.5s ease;
+}
 
 .mine-btn {
     background-color: #007bff;
@@ -160,16 +168,21 @@ h1, h2 {
     padding: 8px 16px;
     border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
 }
 
 .mine-btn:disabled {
     background-color: #6c757d;
     cursor: not-allowed;
+    animation: none;
 }
 
 .mine-btn.completed {
     background-color: #28a745;
+}
+
+.mine-btn.mining {
+    animation: miningPulse 1s infinite;
 }
 
 .add-block-indicator {
@@ -178,7 +191,7 @@ h1, h2 {
     color: #28a745;
     font-weight: bold;
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: all 0.3s ease;
 }
 
 .add-block-indicator:hover {
@@ -187,6 +200,7 @@ h1, h2 {
 
 .add-block-indicator.visible {
     display: inline-block;
+    animation: blockAppear 0.5s ease-out;
 }
 
 /* Tooltip styles */
@@ -310,6 +324,12 @@ button[data-tooltip] {
     border-radius: 4px;
     border: 1px solid #ced4da;
     margin-right: 10px;
+    transition: all 0.3s ease;
+}
+
+.difficulty-control select:focus {
+    transform: scale(1.02);
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
 }
 
 .difficulty-info {
@@ -473,4 +493,133 @@ div.code-toolbar > .toolbar > .toolbar-item > button:hover {
 
 .math-explanation strong {
     color: #2c3e50;
+}
+
+/* Block Animations */
+@keyframes blockAppear {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes miningPulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.02);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes hashUpdate {
+    0% {
+        background-color: #fff;
+    }
+    50% {
+        background-color: #e3f2fd;
+    }
+    100% {
+        background-color: #fff;
+    }
+}
+
+@keyframes chainUpdate {
+    0% {
+        border-color: #a3d8b0;
+    }
+    50% {
+        border-color: #28a745;
+    }
+    100% {
+        border-color: #a3d8b0;
+    }
+}
+
+/* Mining button animation */
+.mine-btn:disabled {
+    animation: none;
+}
+
+.mine-btn.mining {
+    animation: miningPulse 1s infinite;
+}
+
+/* Mining progress animation */
+@keyframes miningProgress {
+    0% {
+        width: 0%;
+    }
+    100% {
+        width: 100%;
+    }
+}
+
+.mining-progress {
+    height: 3px;
+    background: linear-gradient(90deg, #007bff, #28a745);
+    width: 0%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    animation: miningProgress 2s linear infinite;
+}
+
+/* Network visualization animations */
+@keyframes nodeAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes connectionAppear {
+    from {
+        stroke-dasharray: 0 100;
+    }
+    to {
+        stroke-dasharray: 100 0;
+    }
+}
+
+.network-node {
+    animation: nodeAppear 0.5s ease-out;
+}
+
+.network-connection {
+    stroke-dasharray: 100;
+    animation: connectionAppear 0.5s ease-out;
+}
+
+/* Chain status animation */
+@keyframes statusUpdate {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+#chain-status span {
+    transition: all 0.3s ease;
+}
+
+#chain-status span.valid,
+#chain-status span.invalid {
+    animation: statusUpdate 0.5s ease;
 }

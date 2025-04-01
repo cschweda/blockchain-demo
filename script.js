@@ -65,6 +65,17 @@ document.addEventListener("DOMContentLoaded", () => {
       this.nonce = 0;
       let hash = await this.calculateHash();
 
+      // Add mining animation to block if it exists
+      const blockElement = document.getElementById(`block-${this.index}`);
+      if (blockElement) {
+        blockElement.classList.add("mining");
+
+        // Add mining progress bar
+        const progressBar = document.createElement("div");
+        progressBar.className = "mining-progress";
+        blockElement.appendChild(progressBar);
+      }
+
       while (hash.substring(0, difficulty.length) !== difficulty) {
         this.nonce++;
         hash = await this.calculateHash();
@@ -75,6 +86,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const endTime = performance.now();
       miningTimes.push(endTime - startTime);
+
+      // Remove mining animations if block element exists
+      if (blockElement) {
+        blockElement.classList.remove("mining");
+        const progressBar = blockElement.querySelector(".mining-progress");
+        if (progressBar) {
+          progressBar.remove();
+        }
+      }
 
       this.hash = hash;
       this.mined = true;
@@ -94,15 +114,6 @@ document.addEventListener("DOMContentLoaded", () => {
       updateNetworkVisualization();
     }
 
-    // Helper to update UI during mining (shows nonce changes)
-    updateMiningProgressUI() {
-      const blockElement = document.getElementById(`block-${this.index}`);
-      if (blockElement) {
-        blockElement.querySelector(".nonce-input").value = this.nonce;
-        // Maybe add a temporary "mining..." status
-      }
-    }
-
     // Update the visual representation of this block
     async updateUI() {
       const blockElement = document.getElementById(`block-${this.index}`);
@@ -113,17 +124,25 @@ document.addEventListener("DOMContentLoaded", () => {
       blockElement.querySelector(".prev-hash-value").textContent =
         this.previousHash;
 
+      // Add hash update animation
+      const hashValueEl = blockElement.querySelector(".hash-value");
+      hashValueEl.classList.add("updating");
+
       // Recalculate current hash display based on current data/nonce
       const currentHash = await this.calculateHash();
-      const hashValueEl = blockElement.querySelector(".hash-value");
       hashValueEl.textContent = currentHash;
+
+      // Remove hash update animation after a delay
+      setTimeout(() => {
+        hashValueEl.classList.remove("updating");
+      }, 500);
 
       // Style based on mined status and hash validity
       blockElement.classList.toggle("mined", this.mined);
       blockElement.classList.toggle(
         "invalid",
         this.mined && currentHash !== this.hash
-      ); // Invalid if mined but current calc doesn't match stored hash
+      );
 
       // Check previous hash match visually (only for blocks > 0)
       const prevHashEl = blockElement.querySelector(".prev-hash-value");
@@ -134,25 +153,39 @@ document.addEventListener("DOMContentLoaded", () => {
           this.previousHash !== actualPrevHash
         );
       } else {
-        prevHashEl.classList.remove("mismatch"); // Genesis block prev hash is always "0"
+        prevHashEl.classList.remove("mismatch");
       }
 
-      // Update add block indicator visibility
+      // Update add block indicator visibility with animation
       const addBlockIndicator = blockElement.querySelector(
         ".add-block-indicator"
       );
-      addBlockIndicator.classList.toggle(
-        "visible",
-        this.index === blockchain.length - 1
-      );
+      if (this.index === blockchain.length - 1) {
+        addBlockIndicator.classList.add("visible");
+      } else {
+        addBlockIndicator.classList.remove("visible");
+      }
 
-      // Update mine button state
+      // Update mine button state with animation
       const mineButton = blockElement.querySelector(".mine-btn");
       if (mineButton) {
-        // Disable button if block is mined and hash is valid
         const isHashValid = currentHash.startsWith(difficulty);
         mineButton.disabled = this.mined && isHashValid;
         mineButton.classList.toggle("completed", this.mined && isHashValid);
+        mineButton.classList.toggle("mining", this.mined && !isHashValid);
+      }
+    }
+
+    // Update mining progress UI with animation
+    updateMiningProgressUI() {
+      const blockElement = document.getElementById(`block-${this.index}`);
+      if (blockElement) {
+        const nonceInput = blockElement.querySelector(".nonce-input");
+        nonceInput.value = this.nonce;
+        nonceInput.classList.add("updating");
+        setTimeout(() => {
+          nonceInput.classList.remove("updating");
+        }, 200);
       }
     }
   }
@@ -171,6 +204,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function addNewBlock() {
+    // Check if there are any blocks in the chain
+    if (blockchain.length === 0) {
+      console.error("Cannot add new block: No blocks in chain");
+      return;
+    }
+
     // Hide the '+' on the previous last block
     const lastBlock = blockchain[blockchain.length - 1];
     const lastBlockElement = document.getElementById(
@@ -180,7 +219,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const lastBlockIndicator = lastBlockElement.querySelector(
         ".add-block-indicator"
       );
-      lastBlockIndicator.classList.remove("visible");
+      if (lastBlockIndicator) {
+        lastBlockIndicator.classList.remove("visible");
+      }
     }
 
     // Create and add the new block
@@ -248,6 +289,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Tooltip management
     let tooltip = null;
     let tooltipTimeout = null;
+    let isScrolling = false;
+    let scrollTimeout = null;
 
     function createTooltip() {
       if (!tooltip) {
@@ -286,23 +329,60 @@ document.addEventListener("DOMContentLoaded", () => {
       tooltip.style.left = `${left}px`;
     }
 
+    // Track scrolling state
+    window.addEventListener("scroll", () => {
+      isScrolling = true;
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        isScrolling = false;
+      }, 150); // Consider scrolling finished after 150ms of no scroll events
+    });
+
     // Add tooltips to all elements with data-tooltip attribute
     blockElement.querySelectorAll("[data-tooltip]").forEach((element) => {
+      let tooltipTimeout = null;
+      let isScrolling = false;
+      let scrollTimeout = null;
+
+      // Track scrolling state
+      window.addEventListener("scroll", () => {
+        isScrolling = true;
+        if (scrollTimeout) clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+          isScrolling = false;
+        }, 150); // Consider scrolling finished after 150ms of no scroll events
+      });
+
       element.addEventListener("mouseenter", (e) => {
-        createTooltip();
-        tooltip.textContent = e.target.dataset.tooltip;
-        tooltip.classList.add("visible");
-        positionTooltip(e.target);
+        // Clear any existing timeout
+        if (tooltipTimeout) clearTimeout(tooltipTimeout);
+
+        // Set a new timeout to show tooltip after delay
+        tooltipTimeout = setTimeout(() => {
+          // Only show tooltip if not scrolling
+          if (!isScrolling) {
+            createTooltip();
+            tooltip.textContent = e.target.dataset.tooltip;
+            tooltip.classList.add("visible");
+            positionTooltip(e.target);
+          }
+        }, 200); // 200ms delay before showing tooltip
       });
 
       element.addEventListener("mouseleave", () => {
-        tooltipTimeout = setTimeout(() => {
+        // Clear the show timeout if it exists
+        if (tooltipTimeout) clearTimeout(tooltipTimeout);
+
+        // Hide tooltip immediately
+        if (tooltip) {
           tooltip.classList.remove("visible");
-        }, 100);
+        }
       });
 
       element.addEventListener("mousemove", (e) => {
-        positionTooltip(e.target);
+        if (tooltip && tooltip.classList.contains("visible")) {
+          positionTooltip(e.target);
+        }
       });
     });
 
@@ -490,22 +570,26 @@ document.addEventListener("DOMContentLoaded", () => {
     // Clear canvas
     ctx.clearRect(0, 0, width, height);
 
-    // Draw blocks and connections
+    // Draw blocks and connections with animations
     blockchain.forEach((block, index) => {
       const x = (width / (blockchain.length + 1)) * (index + 1);
       const y = height / 2;
 
-      // Draw block
+      // Draw block with animation
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(1, 1);
       ctx.fillStyle = block.mined ? "#28a745" : "#dc3545";
-      ctx.fillRect(x - 30, y - 30, 60, 60);
+      ctx.fillRect(-30, -30, 60, 60);
 
       // Draw block number
       ctx.fillStyle = "white";
       ctx.font = "12px Arial";
       ctx.textAlign = "center";
-      ctx.fillText(block.index, x, y + 4);
+      ctx.fillText(block.index, 0, 4);
+      ctx.restore();
 
-      // Draw connection to previous block
+      // Draw animated connection to previous block
       if (index > 0) {
         const prevX = (width / (blockchain.length + 1)) * index;
         ctx.beginPath();
@@ -515,6 +599,7 @@ document.addEventListener("DOMContentLoaded", () => {
           block.previousHash === blockchain[index - 1].hash
             ? "#28a745"
             : "#dc3545";
+        ctx.lineWidth = 2;
         ctx.stroke();
       }
     });
