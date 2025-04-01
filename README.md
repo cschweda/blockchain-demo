@@ -2,6 +2,10 @@
 
 A hands-on tool for understanding blockchain technology. This demo demonstrates core concepts like block creation, mining, and chain validation in a simple, easy-to-understand format.
 
+## Live Demo
+
+https://blockchain-learner.netlify.app/
+
 ## Getting Started
 
 ### Running Locally
