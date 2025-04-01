@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactive Blockchain Demo</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1>Interactive Blockchain Demo</h1>
+
+    <div id="explanation">
+      <h2>How it Works:</h2>
+      <ol>
+        <li>
+          <strong>Blocks:</strong> The boxes below represent blocks in a chain.
+          The first is the "Genesis Block".
+        </li>
+        <li>
+          <strong>Data:</strong> Each block holds data. You can type anything
+          into the 'Data' text areas.
+        </li>
+        <li>
+          <strong>Hash:</strong> A unique digital fingerprint (SHA-256) of the
+          block's content (Index, Timestamp, Data, Previous Hash, Nonce). It
+          changes instantly if *any* content changes.
+        </li>
+        <li>
+          <strong>Previous Hash:</strong> Links a block to the one before it,
+          creating the 'chain'. The Genesis Block has "0".
+        </li>
+        <li>
+          <strong>Nonce & Mining:</strong> To add a block securely (in a real
+          blockchain), it must be 'mined'. Click 'Mine' to find a 'Nonce' (a
+          random number) that makes the block's Hash start with "00" (our simple
+          difficulty rule). This takes computational effort.
+        </li>
+        <li>
+          <strong>Immutability:</strong> Try changing data in a *mined* block
+          (green background). Notice its hash changes and no longer starts with
+          "00". This breaks the 'Previous Hash' link for the *next* block,
+          invalidating the chain! The chain status below will turn red.
+        </li>
+        <li>
+          <strong>Fixing the Chain:</strong> To make a broken chain valid again,
+          you must re-mine the tampered block *and* all subsequent blocks in
+          order.
+        </li>
+      </ol>
+      <p>
+        <strong>Goal:</strong> Add blocks, mine them, and try tampering with
+        data to see how the hashes and chain validity change.
+      </p>
+    </div>
+
+    <div class="controls">
+      <button id="add-block-btn">Add New Block</button>
+      <button id="export-chain-btn">Export Chain</button>
+      <button id="import-chain-btn">Import Chain</button>
+      <div id="chain-status">
+        Chain Status: <span class="valid">VALID</span>
+      </div>
+      <div id="chain-stats">
+        <p>Total Blocks: <span id="total-blocks">0</span></p>
+        <p>Average Mining Time: <span id="avg-mining-time">0</span> ms</p>
+      </div>
+      <p>Difficulty: Hash must start with "00"</p>
+    </div>
+
+    <div id="blockchain">
+      <!-- Blocks will be added here by JavaScript -->
+    </div>
+
+    <!-- Add network visualization container -->
+    <div id="network-visualization" class="hidden">
+      <h2>Blockchain Network Visualization</h2>
+      <canvas id="network-canvas"></canvas>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

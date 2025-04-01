@@ -1,0 +1,242 @@
+body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    background-color: #f4f4f4;
+}
+
+h1, h2 {
+    text-align: center;
+    color: #333;
+}
+
+#explanation {
+    background-color: #e9e9e9;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+}
+
+#explanation ol {
+    padding-left: 20px;
+}
+
+#explanation li {
+    margin-bottom: 8px;
+}
+
+.controls {
+    text-align: center;
+    margin-bottom: 25px;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+#add-block-btn {
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-right: 20px;
+    transition: background-color 0.3s ease;
+}
+
+#add-block-btn:hover {
+    background-color: #0056b3;
+}
+
+#chain-status {
+    display: inline-block;
+    font-weight: bold;
+    padding: 8px 15px;
+    border-radius: 5px;
+}
+
+#chain-status .valid {
+    color: #28a745;
+    background-color: #e9f7ec;
+    border: 1px solid #a3d8b0;
+}
+
+#chain-status .invalid {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+}
+
+#blockchain {
+    display: flex;
+    flex-wrap: wrap; /* Allow blocks to wrap on smaller screens */
+    gap: 15px; /* Space between blocks */
+    justify-content: center; /* Center blocks if they don't fill the width */
+    padding: 10px;
+}
+
+.block {
+    border: 1px solid #ccc;
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    width: 300px; /* Fixed width for consistency */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+}
+
+.block.mined {
+    background-color: #e9f7ec; /* Light green for mined */
+    border-color: #a3d8b0;
+}
+
+.block.invalid {
+    background-color: #f8d7da; /* Light red for invalid hash */
+    border-color: #f5c6cb;
+}
+
+
+.block-header {
+    font-weight: bold;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #eee;
+    font-size: 1.1em;
+    color: #555;
+}
+
+.block label {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 3px;
+    font-weight: bold;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.block textarea,
+.block input[type="number"],
+.block .hash-value,
+.block .prev-hash-value {
+    width: calc(100% - 12px); /* Adjust for padding */
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-family: monospace; /* Good for hashes */
+    word-wrap: break-word; /* Wrap long hashes */
+}
+
+.block textarea {
+    height: 60px;
+    resize: vertical;
+    font-family: sans-serif; /* Use standard font for data */
+}
+
+.block .hash-value,
+.block .prev-hash-value {
+    background-color: #f8f9fa;
+    min-height: 1.2em; /* Ensure space even if empty */
+    overflow-wrap: break-word;
+}
+
+.block .hash-value.invalid,
+.block .prev-hash-value.mismatch {
+     color: #dc3545; /* Red text for invalid/mismatched hashes */
+     font-weight: bold;
+}
+
+
+.mine-btn {
+    padding: 8px 15px;
+    margin-top: 10px;
+    cursor: pointer;
+    background-color: #ffc107;
+    color: #333;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.mine-btn:hover {
+    background-color: #e0a800;
+}
+
+.mine-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Chain stats styling */
+#chain-stats {
+    background-color: #f8f9fa;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+}
+
+#chain-stats p {
+    margin: 5px 0;
+}
+
+/* Network visualization */
+#network-visualization {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+}
+
+#network-visualization.hidden {
+    display: none;
+}
+
+#network-canvas {
+    width: 100%;
+    height: 300px;
+    background-color: white;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+}
+
+/* Export/Import buttons */
+#export-chain-btn,
+#import-chain-btn {
+    margin: 0 5px;
+    padding: 8px 16px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#export-chain-btn:hover,
+#import-chain-btn:hover {
+    background-color: #218838;
+}
+
+/* Responsive design improvements */
+@media (max-width: 768px) {
+    .controls {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .controls button {
+        margin: 5px 0;
+        width: 100%;
+    }
+
+    #network-visualization {
+        display: none; /* Hide network visualization on mobile */
+    }
+}
