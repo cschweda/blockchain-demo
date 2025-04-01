@@ -133,19 +133,27 @@ document.addEventListener("DOMContentLoaded", () => {
           "mismatch",
           this.previousHash !== actualPrevHash
         );
-        // Ensure the internal previousHash matches reality if the previous block was just mined/changed
-        if (this.previousHash !== actualPrevHash) {
-          // This indicates a break, validateChain handles the overall status
-          // but we might need to update this block's internal prevHash if the user intends to re-mine *this* one.
-          // For simplicity now, we rely on validateChain and re-mining.
-        }
       } else {
         prevHashEl.classList.remove("mismatch"); // Genesis block prev hash is always "0"
       }
 
-      // Disable mine button if already mined and valid, or enable if not mined/invalidated
+      // Update add block indicator visibility
+      const addBlockIndicator = blockElement.querySelector(
+        ".add-block-indicator"
+      );
+      addBlockIndicator.classList.toggle(
+        "visible",
+        this.index === blockchain.length - 1
+      );
+
+      // Update mine button state
       const mineButton = blockElement.querySelector(".mine-btn");
-      mineButton.disabled = this.mined && currentHash === this.hash;
+      if (mineButton) {
+        // Disable button if block is mined and hash is valid
+        const isHashValid = currentHash.startsWith(difficulty);
+        mineButton.disabled = this.mined && isHashValid;
+        mineButton.classList.toggle("completed", this.mined && isHashValid);
+      }
     }
   }
 
@@ -163,7 +171,19 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function addNewBlock() {
+    // Hide the '+' on the previous last block
     const lastBlock = blockchain[blockchain.length - 1];
+    const lastBlockElement = document.getElementById(
+      `block-${lastBlock.index}`
+    );
+    if (lastBlockElement) {
+      const lastBlockIndicator = lastBlockElement.querySelector(
+        ".add-block-indicator"
+      );
+      lastBlockIndicator.classList.remove("visible");
+    }
+
+    // Create and add the new block
     const newIndex = lastBlock.index + 1;
     const newTimestamp = new Date().toISOString();
     const newData = `Block ${newIndex} Data`;
@@ -189,7 +209,8 @@ document.addEventListener("DOMContentLoaded", () => {
             <label for="nonce-${block.index}">Nonce:</label>
             <input type="number" id="nonce-${
               block.index
-            }" class="nonce-input" value="${block.nonce}" readonly>
+            }" class="nonce-input" value="${block.nonce}" readonly
+            data-tooltip="A number that miners change to find a valid hash. Higher nonce = more attempts.">
 
             <label for="data-${block.index}">Data:</label>
             <textarea id="data-${block.index}" class="block-data">${
@@ -197,20 +218,102 @@ document.addEventListener("DOMContentLoaded", () => {
     }</textarea>
 
             <label>Prev. Hash:</label>
-            <div class="prev-hash-value">${block.previousHash}</div>
+            <div class="prev-hash-value" data-tooltip="Links this block to the previous one. Changing data breaks this link.">${
+              block.previousHash
+            }</div>
 
             <label>Hash:</label>
-            <div class="hash-value">Calculating...</div>
+            <div class="hash-value" data-tooltip="Unique fingerprint of the block's contents. Must start with ${difficulty} to be valid.">Calculating...</div>
 
-            <button class="mine-btn" data-index="${
-              block.index
-            }">Mine Block</button>
+            <div class="button-container">
+              <button class="mine-btn" data-index="${
+                block.index
+              }" data-tooltip="Click to find a valid hash by changing the nonce. This process is called 'mining'. The button becomes disabled once mining is complete.">Mine Block</button>
+              <span class="add-block-indicator ${
+                block.index === blockchain.length - 1 ? "visible" : ""
+              }" data-index="${
+      block.index
+    }" data-tooltip="Add another block">+</span>
+            </div>
         `;
 
     blockchainContainer.appendChild(blockElement);
 
     // Add Event Listeners for this specific block
     const dataTextArea = blockElement.querySelector(".block-data");
+    const addBlockIndicator = blockElement.querySelector(
+      ".add-block-indicator"
+    );
+
+    // Tooltip management
+    let tooltip = null;
+    let tooltipTimeout = null;
+
+    function createTooltip() {
+      if (!tooltip) {
+        tooltip = document.createElement("div");
+        tooltip.className = "tooltip";
+        document.body.appendChild(tooltip);
+      }
+    }
+
+    function positionTooltip(element) {
+      const rect = element.getBoundingClientRect();
+      const tooltipRect = tooltip.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+
+      // Default position (above the element)
+      let top = rect.top - tooltipRect.height - 10;
+      let left = rect.left + (rect.width - tooltipRect.width) / 2;
+
+      // Check if tooltip would go off the top of the viewport
+      if (top < 0) {
+        top = rect.bottom + 10; // Position below instead
+      }
+
+      // Check if tooltip would go off the left of the viewport
+      if (left < 0) {
+        left = 0;
+      }
+
+      // Check if tooltip would go off the right of the viewport
+      if (left + tooltipRect.width > viewportWidth) {
+        left = viewportWidth - tooltipRect.width;
+      }
+
+      tooltip.style.top = `${top}px`;
+      tooltip.style.left = `${left}px`;
+    }
+
+    // Add tooltips to all elements with data-tooltip attribute
+    blockElement.querySelectorAll("[data-tooltip]").forEach((element) => {
+      element.addEventListener("mouseenter", (e) => {
+        createTooltip();
+        tooltip.textContent = e.target.dataset.tooltip;
+        tooltip.classList.add("visible");
+        positionTooltip(e.target);
+      });
+
+      element.addEventListener("mouseleave", () => {
+        tooltipTimeout = setTimeout(() => {
+          tooltip.classList.remove("visible");
+        }, 100);
+      });
+
+      element.addEventListener("mousemove", (e) => {
+        positionTooltip(e.target);
+      });
+    });
+
+    // Clean up tooltip on page unload
+    window.addEventListener("unload", () => {
+      if (tooltip) {
+        tooltip.remove();
+        tooltip = null;
+      }
+    });
+
     dataTextArea.addEventListener("input", async (e) => {
       block.data = e.target.value; // Update block data object
       block.mined = false; // Changing data invalidates mining
@@ -219,6 +322,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     const mineButton = blockElement.querySelector(".mine-btn");
+
     mineButton.addEventListener("click", async (e) => {
       mineButton.disabled = true; // Disable button while mining
       mineButton.textContent = "Mining...";
@@ -226,14 +330,22 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         await blockchain[index].mineBlock(difficulty); // Start mining
         mineButton.textContent = "Mine Block"; // Reset button text after success
+        mineButton.classList.add("completed");
+        // Show the add block indicator if this is the last block or genesis block
+        if (index === blockchain.length - 1 || index === 0) {
+          addBlockIndicator.classList.add("visible");
+        }
         // updateUI is called within mineBlock
       } catch (error) {
         console.error("Mining error:", error);
         mineButton.textContent = "Mining Failed"; // Indicate error
-        // Re-enable button maybe? Or leave disabled if state is bad.
-        // For now, leave potentially disabled, relies on user fixing data/retrying.
         validateChain();
       }
+    });
+
+    // Add click handler for the add block indicator
+    addBlockIndicator.addEventListener("click", () => {
+      addNewBlock();
     });
 
     // Initial UI update after rendering
@@ -434,4 +546,32 @@ document.addEventListener("DOMContentLoaded", () => {
     networkCanvas.height = networkCanvas.offsetHeight;
     updateNetworkVisualization();
   });
+
+  // Code tabs functionality
+  const tabButtons = document.querySelectorAll(".tab-button");
+  const codeContents = document.querySelectorAll(".code-content");
+
+  function switchTab(lang) {
+    // Remove active class from all buttons and contents
+    tabButtons.forEach((btn) => btn.classList.remove("active"));
+    codeContents.forEach((content) => content.classList.remove("active"));
+
+    // Add active class to selected button and content
+    document.querySelector(`[data-lang="${lang}"]`).classList.add("active");
+    document.getElementById(lang).classList.add("active");
+
+    // Re-trigger Prism highlighting
+    Prism.highlightAll();
+  }
+
+  // Add click handlers to all tab buttons
+  tabButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const lang = button.getAttribute("data-lang");
+      switchTab(lang);
+    });
+  });
+
+  // Initial highlighting
+  Prism.highlightAll();
 });

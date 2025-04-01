@@ -4,6 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Interactive Blockchain Demo</title>
+    <!-- Prism CSS -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.css"
+      rel="stylesheet"
+    />
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -13,50 +23,49 @@
       <h2>How it Works:</h2>
       <ol>
         <li>
-          <strong>Blocks:</strong> The boxes below represent blocks in a chain.
-          The first is the "Genesis Block".
+          <strong>Data Structure:</strong> While blockchain shares some characteristics with linked lists (using pointers to connect elements), it's fundamentally different. Unlike a simple linked list, blockchain uses cryptographic hashes as links and requires computational work (mining) to add new blocks. This makes it immutable and secure.
         </li>
         <li>
-          <strong>Data:</strong> Each block holds data. You can type anything
-          into the 'Data' text areas.
+          <strong>Blocks:</strong> The boxes below represent blocks in a chain. The first is the "Genesis Block". Each block is connected to the previous one through a cryptographic hash, creating an immutable chain.
         </li>
         <li>
-          <strong>Hash:</strong> A unique digital fingerprint (SHA-256) of the
-          block's content (Index, Timestamp, Data, Previous Hash, Nonce). It
-          changes instantly if *any* content changes.
+          <strong>Data:</strong> Each block holds data. You can type anything into the 'Data' text areas. However, once a block is mined, its data cannot be changed without invalidating the entire chain.
         </li>
         <li>
-          <strong>Previous Hash:</strong> Links a block to the one before it,
-          creating the 'chain'. The Genesis Block has "0".
+          <strong>Hash:</strong> A unique digital fingerprint (SHA-256) of the block's content (Index, Timestamp, Data, Previous Hash, Nonce). It changes instantly if *any* content changes. This is different from a simple pointer in a linked list - it's a cryptographic proof of the block's content.
         </li>
         <li>
-          <strong>Nonce & Mining:</strong> To add a block securely (in a real
-          blockchain), it must be 'mined'. Click 'Mine' to find a 'Nonce' (a
-          random number) that makes the block's Hash start with "00" (our simple
-          difficulty rule). This takes computational effort.
+          <strong>Previous Hash:</strong> Links a block to the one before it, creating the 'chain'. Unlike a linked list's pointer, this hash is a cryptographic proof that depends on the previous block's entire content. The Genesis Block has "0".
         </li>
         <li>
-          <strong>Immutability:</strong> Try changing data in a *mined* block
-          (green background). Notice its hash changes and no longer starts with
-          "00". This breaks the 'Previous Hash' link for the *next* block,
-          invalidating the chain! The chain status below will turn red.
+          <strong>Nonce & Mining:</strong> To add a block securely (in a real blockchain), it must be 'mined'. Click 'Mine' to find a 'Nonce' (a random number) that makes the block's Hash start with "00" (our simple difficulty rule). This takes computational effort, which is a key difference from simple data structures.
         </li>
         <li>
-          <strong>Fixing the Chain:</strong> To make a broken chain valid again,
-          you must re-mine the tampered block *and* all subsequent blocks in
-          order.
+          <strong>Immutability:</strong> Try changing data in a *mined* block (green background). Notice its hash changes and no longer starts with "00". This breaks the 'Previous Hash' link for the *next* block, invalidating the chain! The chain status below will turn red. This immutability is a core feature that distinguishes blockchain from traditional data structures.
+        </li>
+        <li>
+          <strong>Fixing the Chain:</strong> To make a broken chain valid again, you must re-mine the tampered block *and* all subsequent blocks in order. This is because each block's hash depends on the previous block's content, creating a chain of cryptographic proofs.
         </li>
       </ol>
       <p>
-        <strong>Goal:</strong> Add blocks, mine them, and try tampering with
-        data to see how the hashes and chain validity change.
+        <strong>Goal:</strong> Add blocks, mine them, and try tampering with data to see how the hashes and chain validity change. Notice how this differs from a simple linked list - you can't just modify a pointer to fix a broken chain!
       </p>
     </div>
 
     <div class="controls">
       <button id="add-block-btn">Add New Block</button>
-      <button id="export-chain-btn">Export Chain</button>
-      <button id="import-chain-btn">Import Chain</button>
+      <button
+        id="export-chain-btn"
+        data-tooltip="Save your blockchain to a JSON file. Useful for sharing or backing up your work."
+      >
+        Export Chain
+      </button>
+      <button
+        id="import-chain-btn"
+        data-tooltip="Load a previously saved blockchain from a JSON file. This will replace your current chain."
+      >
+        Import Chain
+      </button>
       <div id="chain-status">
         Chain Status: <span class="valid">VALID</span>
       </div>
@@ -66,7 +75,10 @@
       </div>
       <div class="difficulty-control">
         <label for="difficulty-select">Mining Difficulty:</label>
-        <select id="difficulty-select">
+        <select
+          id="difficulty-select"
+          data-tooltip="More leading zeros = longer mining time. Each additional zero makes it 16x harder to find a valid hash."
+        >
           <option value="00">Easy (00)</option>
           <option value="000">Medium (000)</option>
           <option value="0000">Hard (0000)</option>
@@ -79,12 +91,518 @@
       <!-- Blocks will be added here by JavaScript -->
     </div>
 
-    <!-- Add network visualization container -->
+    <div class="mining-math-section">
+      <h2>The Mathematics Behind Mining</h2>
+      <p>
+        Mining in blockchain is essentially a mathematical puzzle that requires
+        finding a hash that meets certain criteria. Here's how it works:
+      </p>
+
+      <div class="code-examples">
+        <h3>Code Examples</h3>
+        <div class="code-tabs">
+          <button class="tab-button active" data-lang="javascript">
+            JavaScript
+          </button>
+          <button class="tab-button" data-lang="python">Python</button>
+          <button class="tab-button" data-lang="cpp">C++</button>
+          <button class="tab-button" data-lang="java">Java</button>
+          <button class="tab-button" data-lang="ruby">Ruby</button>
+          <button class="tab-button" data-lang="swift">Swift</button>
+          <button class="tab-button" data-lang="go">Go</button>
+          <button class="tab-button" data-lang="rust">Rust</button>
+        </div>
+
+        <div class="code-content active" id="javascript">
+          <pre class="language-javascript"><code>// JavaScript Mining Implementation using Web Crypto API
+
+// Function to mine a block with a given difficulty
+async function mineBlock(data, difficulty) {
+    let nonce = 0;  // Start with nonce = 0
+    const prefix = '0'.repeat(difficulty);  // Create target prefix (e.g., "000")
+    
+    // Keep trying different nonces until we find a valid hash
+    while (true) {
+        const hash = await calculateHash(data + nonce);
+        // Check if hash meets difficulty requirement
+        if (hash.startsWith(prefix)) {
+            return { nonce, hash };  // Found a valid hash!
+        }
+        nonce++;  // Try next nonce value
+    }
+}
+
+// Helper function to calculate SHA-256 hash using Web Crypto API
+async function calculateHash(input) {
+    // Convert input string to bytes
+    const encoder = new TextEncoder();
+    const data = encoder.encode(input);
+    
+    // Calculate SHA-256 hash
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    
+    // Convert hash buffer to hexadecimal string
+    return Array.from(new Uint8Array(hashBuffer))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+}
+
+// Example usage with a sample block
+const blockData = {
+    index: 1,
+    timestamp: Date.now(),
+    data: "Transaction Data",
+    previousHash: "0".repeat(64)  // Previous hash (64 zeros for example)
+};
+
+// Try to mine the block with difficulty 4 (four leading zeros)
+const result = await mineBlock(JSON.stringify(blockData), 4);
+console.log(`Found nonce: ${result.nonce}, Hash: ${result.hash}`);</code></pre>
+        </div>
+
+        <div class="code-content" id="python">
+          <pre class="language-python"><code># Python Mining Implementation using hashlib
+import hashlib
+import json
+import time
+
+def calculate_hash(data: str) -> str:
+    """Calculate SHA-256 hash of input data."""
+    return hashlib.sha256(data.encode()).hexdigest()
+
+def mine_block(block_data: dict, difficulty: int) -> tuple[int, str]:
+    """Mine a block by finding a hash with required number of leading zeros.
+    
+    Args:
+        block_data: Dictionary containing block information
+        difficulty: Number of leading zeros required
+        
+    Returns:
+        Tuple of (nonce, hash) that satisfies the difficulty requirement
+    """
+    prefix = '0' * difficulty  # Create target prefix (e.g., "000")
+    nonce = 0  # Start with nonce = 0
+    
+    while True:
+        # Add current nonce to block data
+        block_data['nonce'] = nonce
+        # Convert block data to JSON string (sorted to ensure consistent hashing)
+        block_str = json.dumps(block_data, sort_keys=True)
+        # Calculate hash of block data with current nonce
+        hash_result = calculate_hash(block_str)
+        
+        # Check if hash meets difficulty requirement
+        if hash_result.startswith(prefix):
+            return nonce, hash_result  # Found a valid hash!
+        nonce += 1  # Try next nonce value
+
+# Example usage with a sample block
+block = {
+    'index': 1,
+    'timestamp': time.time(),
+    'data': "Transaction Data",
+    'previous_hash': "0" * 64  # Previous hash (64 zeros for example)
+}
+
+# Try to mine the block with difficulty 4 (four leading zeros)
+nonce, hash_result = mine_block(block, 4)
+print(f"Found nonce: {nonce}, Hash: {hash_result}")</code></pre>
+        </div>
+
+        <div class="code-content" id="cpp">
+          <pre class="language-cpp"><code>// C++ Mining Implementation using OpenSSL
+#include &lt;openssl/sha.h&gt;
+#include &lt;string&gt;
+#include &lt;iomanip&gt;
+#include &lt;sstream&gt;
+
+class BlockMiner {
+private:
+    // Helper function to calculate SHA-256 hash using OpenSSL
+    static std::string calculateHash(const std::string& input) {
+        unsigned char hash[SHA256_DIGEST_LENGTH];
+        SHA256_CTX sha256;
+        SHA256_Init(&sha256);
+        SHA256_Update(&sha256, input.c_str(), input.length());
+        SHA256_Final(hash, &sha256);
+
+        // Convert hash bytes to hexadecimal string
+        std::stringstream ss;
+        for(int i = 0; i < SHA256_DIGEST_LENGTH; i++) {
+            ss << std::hex << std::setw(2) << std::setfill('0') 
+               << static_cast<int>(hash[i]);
+        }
+        return ss.str();
+    }
+
+public:
+    // Mine a block by finding a hash with required number of leading zeros
+    static std::pair<uint64_t, std::string> mineBlock(
+        const std::string& data, 
+        int difficulty
+    ) {
+        std::string prefix(difficulty, '0');  // Create target prefix (e.g., "000")
+        uint64_t nonce = 0;  // Start with nonce = 0
+        
+        while (true) {
+            // Combine data and current nonce
+            std::string input = data + std::to_string(nonce);
+            std::string hash = calculateHash(input);
+            
+            // Check if hash meets difficulty requirement
+            if (hash.substr(0, difficulty) == prefix) {
+                return {nonce, hash};  // Found a valid hash!
+            }
+            nonce++;  // Try next nonce value
+        }
+    }
+};
+
+// Example usage with a sample block
+int main() {
+    // Create sample block data as JSON string
+    std::string blockData = R"({
+        "index": 1,
+        "timestamp": 1234567890,
+        "data": "Transaction Data",
+        "previousHash": "0000000000000000000000000000000000000000000000000000000000000000"
+    })";
+    
+    // Try to mine the block with difficulty 4 (four leading zeros)
+    auto [nonce, hash] = BlockMiner::mineBlock(blockData, 4);
+    std::cout << "Found nonce: " << nonce << ", Hash: " << hash << std::endl;
+    return 0;
+}</code></pre>
+        </div>
+
+        <div class="code-content" id="java">
+          <pre class="language-java"><code>// Java Mining Implementation using MessageDigest
+import java.security.MessageDigest;
+import java.nio.charset.StandardCharsets;
+
+public class BlockMiner {
+    // Helper function to calculate SHA-256 hash
+    private static String calculateHash(String input) throws Exception {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] hash = digest.digest(input.getBytes(StandardCharsets.UTF_8));
+        
+        StringBuilder hexString = new StringBuilder();
+        for (byte b : hash) {
+            String hex = Integer.toHexString(0xff & b);
+            if (hex.length() == 1) hexString.append('0');
+            hexString.append(hex);
+        }
+        return hexString.toString();
+    }
+    
+    // Mine a block by finding a hash with required number of leading zeros
+    public static MiningResult mineBlock(String data, int difficulty) throws Exception {
+        String prefix = "0".repeat(difficulty);  // Create target prefix (e.g., "000")
+        long nonce = 0;  // Start with nonce = 0
+        
+        while (true) {
+            // Combine data and current nonce
+            String input = data + nonce;
+            String hash = calculateHash(input);
+            
+            // Check if hash meets difficulty requirement
+            if (hash.startsWith(prefix)) {
+                return new MiningResult(nonce, hash);  // Found a valid hash!
+            }
+            nonce++;  // Try next nonce value
+        }
+    }
+    
+    // Example usage with a sample block
+    public static void main(String[] args) throws Exception {
+        // Create sample block data as JSON string
+        String blockData = String.format("{" +
+            "\"index\": 1," +
+            "\"timestamp\": %d," +
+            "\"data\": \"Transaction Data\"," +
+            "\"previousHash\": \"%s\"" +
+            "}", System.currentTimeMillis(), "0".repeat(64));
+            
+        // Try to mine the block with difficulty 4 (four leading zeros)
+        MiningResult result = mineBlock(blockData, 4);
+        System.out.printf("Found nonce: %d, Hash: %s%n", 
+            result.nonce, result.hash);
+    }
+    
+    // Helper class to hold mining result
+    static class MiningResult {
+        final long nonce;
+        final String hash;
+        
+        MiningResult(long nonce, String hash) {
+            this.nonce = nonce;
+            this.hash = hash;
+        }
+    }
+}</code></pre>
+        </div>
+
+        <div class="code-content" id="ruby">
+          <pre class="language-ruby"><code># Ruby Mining Implementation using Digest::SHA256
+require 'digest'
+require 'json'
+
+class BlockMiner
+  # Calculate SHA-256 hash of input data
+  def self.calculate_hash(input)
+    Digest::SHA256.hexdigest(input)
+  end
+  
+  # Mine a block by finding a hash with required number of leading zeros
+  def self.mine_block(data, difficulty)
+    prefix = '0' * difficulty  # Create target prefix (e.g., "000")
+    nonce = 0  # Start with nonce = 0
+    
+    loop do
+      # Combine data and current nonce
+      input = data + nonce.to_s
+      hash = calculate_hash(input)
+      
+      # Check if hash meets difficulty requirement
+      return [nonce, hash] if hash.start_with?(prefix)  # Found a valid hash!
+      nonce += 1  # Try next nonce value
+    end
+  end
+end
+
+# Example usage with a sample block
+block_data = {
+  index: 1,
+  timestamp: Time.now.to_i,
+  data: "Transaction Data",
+  previous_hash: '0' * 64  # Previous hash (64 zeros for example)
+}.to_json
+
+# Try to mine the block with difficulty 4 (four leading zeros)
+nonce, hash = BlockMiner.mine_block(block_data, 4)
+puts "Found nonce: #{nonce}, Hash: #{hash}"</code></pre>
+        </div>
+
+        <div class="code-content" id="swift">
+          <pre class="language-swift"><code>// Swift Mining Implementation using CryptoKit
+import Foundation
+import CryptoKit
+
+struct BlockMiner {
+    // Calculate SHA-256 hash of input string
+    static func calculateHash(_ input: String) -> String {
+        let inputData = input.data(using: .utf8)!
+        let hash = SHA256.hash(data: inputData)
+        // Convert hash bytes to hexadecimal string
+        return hash.compactMap { String(format: "%02x", $0) }.joined()
+    }
+    
+    // Mine a block by finding a hash with required number of leading zeros
+    static func mineBlock(data: String, difficulty: Int) -> (nonce: Int, hash: String) {
+        let prefix = String(repeating: "0", count: difficulty)  // Create target prefix
+        var nonce = 0  // Start with nonce = 0
+        
+        while true {
+            // Combine data and current nonce
+            let input = data + String(nonce)
+            let hash = calculateHash(input)
+            
+            // Check if hash meets difficulty requirement
+            if hash.hasPrefix(prefix) {
+                return (nonce, hash)  // Found a valid hash!
+            }
+            nonce += 1  // Try next nonce value
+        }
+    }
+}
+
+// Example usage with a sample block
+let blockData = [
+    "index": 1,
+    "timestamp": Date().timeIntervalSince1970,
+    "data": "Transaction Data",
+    "previousHash": String(repeating: "0", count: 64)  // Previous hash (64 zeros)
+] as [String : Any]
+
+// Convert block data to JSON string
+let jsonData = try! JSONSerialization.data(withJSONObject: blockData)
+let jsonString = String(data: jsonData, encoding: .utf8)!
+
+// Try to mine the block with difficulty 4 (four leading zeros)
+let (nonce, hash) = BlockMiner.mineBlock(data: jsonString, difficulty: 4)
+print("Found nonce: \(nonce), Hash: \(hash)")</code></pre>
+        </div>
+
+        <div class="code-content" id="go">
+          <pre class="language-go"><code>// Go Mining Implementation using crypto/sha256
+package main
+
+import (
+    "crypto/sha256"
+    "encoding/hex"
+    "encoding/json"
+    "fmt"
+    "strings"
+    "time"
+)
+
+// Calculate SHA-256 hash of input string
+func calculateHash(input string) string {
+    hash := sha256.Sum256([]byte(input))
+    return hex.EncodeToString(hash[:])
+}
+
+// Mine a block by finding a hash with required number of leading zeros
+func mineBlock(data string, difficulty int) (int, string) {
+    prefix := strings.Repeat("0", difficulty)  // Create target prefix (e.g., "000")
+    nonce := 0  // Start with nonce = 0
+    
+    for {
+        // Combine data and current nonce
+        input := data + fmt.Sprint(nonce)
+        hash := calculateHash(input)
+        
+        // Check if hash meets difficulty requirement
+        if strings.HasPrefix(hash, prefix) {
+            return nonce, hash  // Found a valid hash!
+        }
+        nonce++  // Try next nonce value
+    }
+}
+
+func main() {
+    // Create sample block data
+    blockData := struct {
+        Index        int       `json:"index"`
+        Timestamp    int64     `json:"timestamp"`
+        Data         string    `json:"data"`
+        PreviousHash string    `json:"previousHash"`
+    }{
+        Index:        1,
+        Timestamp:    time.Now().Unix(),
+        Data:         "Transaction Data",
+        PreviousHash: strings.Repeat("0", 64),  // Previous hash (64 zeros)
+    }
+    
+    // Convert block data to JSON string
+    jsonData, _ := json.Marshal(blockData)
+    
+    // Try to mine the block with difficulty 4 (four leading zeros)
+    nonce, hash := mineBlock(string(jsonData), 4)
+    fmt.Printf("Found nonce: %d, Hash: %s\n", nonce, hash)
+}</code></pre>
+        </div>
+
+        <div class="code-content" id="rust">
+          <pre class="language-rust"><code>// Rust Mining Implementation using sha2 crate
+use sha2::{Sha256, Digest};
+use serde::{Serialize, Deserialize};
+use std::time::{SystemTime, UNIX_EPOCH};
+
+// Block structure definition
+#[derive(Serialize)]
+struct Block {
+    index: u32,
+    timestamp: u64,
+    data: String,
+    previous_hash: String,
+}
+
+// Calculate SHA-256 hash of input string
+fn calculate_hash(input: &str) -> String {
+    let mut hasher = Sha256::new();
+    hasher.update(input.as_bytes());
+    format!("{:x}", hasher.finalize())
+}
+
+// Mine a block by finding a hash with required number of leading zeros
+fn mine_block(data: &str, difficulty: usize) -> (u64, String) {
+    let prefix = "0".repeat(difficulty);  // Create target prefix (e.g., "000")
+    let mut nonce = 0u64;  // Start with nonce = 0
+    
+    loop {
+        // Combine data and current nonce
+        let input = format!("{}{}", data, nonce);
+        let hash = calculate_hash(&input);
+        
+        // Check if hash meets difficulty requirement
+        if hash.starts_with(&prefix) {
+            return (nonce, hash);  // Found a valid hash!
+        }
+        nonce += 1;  // Try next nonce value
+    }
+}
+
+fn main() {
+    // Create sample block data
+    let block = Block {
+        index: 1,
+        timestamp: SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_secs(),
+        data: String::from("Transaction Data"),
+        previous_hash: "0".repeat(64),  // Previous hash (64 zeros)
+    };
+    
+    // Convert block data to JSON string
+    let json_data = serde_json::to_string(&block).unwrap();
+    
+    // Try to mine the block with difficulty 4 (four leading zeros)
+    let (nonce, hash) = mine_block(&json_data, 4);
+    println!("Found nonce: {}, Hash: {}", nonce, hash);
+}</code></pre>
+        </div>
+      </div>
+
+      <div class="math-explanation">
+        <h3>Understanding the Math</h3>
+        <ul>
+          <li>
+            <strong>Hash Function:</strong> SHA-256 produces a 256-bit (64
+            character) hexadecimal output
+          </li>
+          <li>
+            <strong>Probability:</strong> Each character in the hash has 16
+            possible values (0-f). The chance of getting a specific character is
+            1/16
+          </li>
+          <li>
+            <strong>Difficulty Calculation:</strong> For a difficulty of "00",
+            the probability is (1/16)² = 1/256. For "000", it's (1/16)³ = 1/4096
+          </li>
+          <li>
+            <strong>Expected Attempts:</strong> On average, you need to try 16^n
+            attempts to find a hash with n leading zeros
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Network visualization container -->
     <div id="network-visualization" class="hidden">
       <h2>Blockchain Network Visualization</h2>
       <canvas id="network-canvas"></canvas>
     </div>
 
+    <!-- Prism JS - Core and plugins -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+
+    <!-- Prism language components -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-ruby.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-swift.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-go.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-rust.min.js"></script>
+
+    <!-- Custom JS -->
     <script src="script.js"></script>
   </body>
 </html>

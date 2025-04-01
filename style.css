@@ -154,23 +154,73 @@ h1, h2 {
 
 
 .mine-btn {
-    padding: 8px 15px;
-    margin-top: 10px;
-    cursor: pointer;
-    background-color: #ffc107;
-    color: #333;
+    background-color: #007bff;
+    color: white;
     border: none;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-
-.mine-btn:hover {
-    background-color: #e0a800;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .mine-btn:disabled {
-    background-color: #ccc;
+    background-color: #6c757d;
     cursor: not-allowed;
+}
+
+.mine-btn.completed {
+    background-color: #28a745;
+}
+
+.add-block-indicator {
+    display: none;
+    margin-left: 8px;
+    color: #28a745;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.add-block-indicator:hover {
+    transform: scale(1.2);
+}
+
+.add-block-indicator.visible {
+    display: inline-block;
+}
+
+/* Tooltip styles */
+.tooltip {
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    max-width: 250px;
+    text-align: left;
+    white-space: normal;
+    line-height: 1.4;
+    margin-top: -15px; /* Move tooltip up slightly */
+}
+
+.tooltip.visible {
+    opacity: 1;
+}
+
+/* Add cursor help for elements with tooltips */
+[data-tooltip] {
+    cursor: help;
+}
+
+/* Ensure tooltips don't interfere with button clicks */
+button[data-tooltip] {
+    cursor: pointer;
 }
 
 /* Chain stats styling */
@@ -265,4 +315,162 @@ h1, h2 {
 .difficulty-info {
     color: #6c757d;
     font-size: 0.9em;
+}
+
+/* Mining Math Section */
+.mining-math-section {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.mining-math-section h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+.mining-math-section h3 {
+    color: #34495e;
+    margin: 25px 0 15px;
+}
+
+.mining-math-section h4 {
+    color: #2c3e50;
+    margin: 15px 0 10px;
+    font-size: 1.1em;
+}
+
+/* Code Examples Section */
+.code-examples {
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 20px 0;
+}
+
+.code-examples h3 {
+    color: #e0e0e0;  /* Light gray for high contrast - approximately 13:1 ratio */
+    margin: 0;
+    padding: 20px;
+    background-color: #1e1e1e;
+    font-size: 16px;
+    font-weight: normal;
+}
+
+.code-tabs {
+    display: flex;
+    background-color: #2d2d2d;
+    border-bottom: 1px solid #3d3d3d;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.tab-button {
+    background: none;
+    border: none;
+    color: #999;
+    padding: 12px 24px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.tab-button:hover {
+    color: #fff;
+    background-color: #3d3d3d;
+}
+
+.tab-button.active {
+    color: #fff;
+    background-color: #1e1e1e;
+    border-bottom: 2px solid #007acc;
+}
+
+.code-content {
+    display: none;
+    padding: 20px;
+    background-color: #1e1e1e;
+}
+
+.code-content.active {
+    display: block;
+}
+
+/* Prism.js customization */
+pre[class*="language-"] {
+    margin: 0;
+    background-color: #1e1e1e;
+    border-radius: 0;
+}
+
+code[class*="language-"] {
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.token.comment {
+    color: #6a9955;
+}
+
+.token.string {
+    color: #ce9178;
+}
+
+.token.number {
+    color: #b5cea8;
+}
+
+.token.keyword {
+    color: #569cd6;
+}
+
+.token.function {
+    color: #dcdcaa;
+}
+
+/* Copy button */
+div.code-toolbar > .toolbar {
+    opacity: 1;
+    top: 0.5em;
+    right: 0.5em;
+}
+
+div.code-toolbar > .toolbar > .toolbar-item > button {
+    background-color: #3d3d3d;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+div.code-toolbar > .toolbar > .toolbar-item > button:hover {
+    background-color: #4d4d4d;
+}
+
+.math-explanation {
+    background-color: white;
+    padding: 20px;
+    border-radius: 6px;
+    margin-top: 30px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.math-explanation ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.math-explanation li {
+    margin: 10px 0;
+    line-height: 1.6;
+}
+
+.math-explanation strong {
+    color: #2c3e50;
 }

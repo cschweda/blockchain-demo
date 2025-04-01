@@ -1,6 +1,40 @@
 # Interactive Blockchain Demo
 
-A hands-on tool for understanding blockchain technology. This demo demonstrates core concepts like block creation, mining, and chain validation in a simple, easy-to-understand format.
+This is an educational tool to demonstrate how blockchain technology works. It provides a visual, interactive way to understand the core concepts of blockchain, including mining, hashing, and chain validation.
+
+## Core Computer Science Concepts
+
+### Blockchain vs. Traditional Data Structures
+
+While blockchain shares some characteristics with traditional data structures, it's important to understand its unique properties:
+
+1. **Similarities to Linked Lists:**
+
+   - Like a linked list, blockchain uses pointers (hashes) to connect elements
+   - Each block references the previous block, similar to a singly-linked list
+   - The chain maintains a strict order of elements
+
+2. **Key Differences from Linked Lists:**
+
+   - **Immutability:** Once a block is added, its data cannot be changed without invalidating the chain
+   - **Cryptographic Links:** Instead of simple memory pointers, blocks are linked using cryptographic hashes
+   - **Proof of Work:** Each block requires computational work (mining) to be added
+   - **Consensus Mechanism:** The chain's validity is determined by network consensus, not just local state
+
+3. **Why It's Not Just a Doubly-Linked List:**
+
+   - A doubly-linked list allows bidirectional traversal and easy modification
+   - Blockchain is designed for immutability and distributed consensus
+   - The mining process adds a unique computational barrier to modification
+   - The chain's integrity is verified through cryptographic proofs, not just pointer validity
+
+4. **Unique Properties:**
+   - **Distributed:** Multiple copies exist across a network
+   - **Consensus-Based:** Changes require network agreement
+   - **Cryptographically Secure:** Links are verified through mathematical proofs
+   - **Immutable History:** Past blocks cannot be modified without affecting all subsequent blocks
+
+This architecture makes blockchain more than just a data structure - it's a distributed system that uses cryptographic principles to maintain data integrity across a network.
 
 ## Live Demo
 
@@ -59,7 +93,8 @@ If you encounter issues:
 
 1. **Adding Blocks**:
 
-   - Click "Add New Block" to create a new block
+   - Click the '+' indicator on the last block to add a new block
+   - Alternatively, use the "Add New Block" button at the top
    - Each block starts unmined (red in the visualization)
 
 2. **Mining Blocks**:
@@ -67,12 +102,13 @@ If you encounter issues:
    - Click "Mine Block" on any unmined block
    - Watch the nonce change as it searches for a valid hash
    - When successful, the block turns green
+   - The '+' indicator will appear on the last block in the chain
 
 3. **Adjusting Difficulty**:
 
    - Use the difficulty selector to change mining requirements
-   - Options range from "00" (easy) to "00000" (expert)
-   - More zeros = longer mining time
+   - Options range from "00" (easy) to "000" (hard)
+   - More zeros = longer mining time (each zero makes it 16x harder)
    - Changing difficulty invalidates all blocks
    - Try different difficulties to see how mining time increases exponentially
 
@@ -81,12 +117,14 @@ If you encounter issues:
    - Change the data in any block's text area
    - Notice how the hash changes immediately
    - The block becomes invalid until re-mined
+   - Invalidating a block breaks the chain
 
 5. **Chain Validation**:
 
    - The chain status shows if all blocks are valid
    - Invalid blocks are highlighted in red
    - Previous hash mismatches are visually indicated
+   - Mining a block updates all subsequent blocks
 
 6. **Export/Import**:
    - Save your blockchain state using "Export Chain"
