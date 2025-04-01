@@ -1,10 +1,6 @@
 # Interactive Blockchain Demo
 
-A hands-on educational tool for understanding blockchain technology through interactive visualization and experimentation.
-
-## Overview
-
-This demo provides a visual and interactive way to learn about blockchain technology. It demonstrates core blockchain concepts like block creation, mining, and chain validation in a simple, easy-to-understand format.
+A hands-on tool for understanding blockchain technology. This demo demonstrates core concepts like block creation, mining, and chain validation in a simple, easy-to-understand format.
 
 ## Getting Started
 
@@ -46,7 +42,7 @@ This demo provides a visual and interactive way to learn about blockchain techno
 
 While you can open `index.html` directly in your browser, some features (like the Web Crypto API) may not work due to security restrictions. Using a local server is recommended.
 
-### Troubleshooting
+#### Troubleshooting
 
 If you encounter issues:
 
@@ -54,6 +50,35 @@ If you encounter issues:
 2. Check the browser's console (F12) for any error messages
 3. Ensure you're accessing the site through `http://` or `https://` (not `file://`)
 4. Try clearing your browser cache if you see unexpected behavior
+
+## Usage
+
+1. **Adding Blocks**:
+
+   - Click "Add New Block" to create a new block
+   - Each block starts unmined (red in the visualization)
+
+2. **Mining Blocks**:
+
+   - Click "Mine Block" on any unmined block
+   - Watch the nonce change as it searches for a valid hash
+   - When successful, the block turns green
+
+3. **Editing Data**:
+
+   - Change the data in any block's text area
+   - Notice how the hash changes immediately
+   - The block becomes invalid until re-mined
+
+4. **Chain Validation**:
+
+   - The chain status shows if all blocks are valid
+   - Invalid blocks are highlighted in red
+   - Previous hash mismatches are visually indicated
+
+5. **Export/Import**:
+   - Save your blockchain state using "Export Chain"
+   - Load a previous state using "Import Chain"
 
 ## Features
 
@@ -177,49 +202,6 @@ In blockchain technology, mining is like solving a complex mathematical puzzle. 
    - Our demo doesn't include rewards or competition
    - Real blockchains have network-wide difficulty adjustment
 
-## Usage
-
-1. **Adding Blocks**:
-
-   - Click "Add New Block" to create a new block
-   - Each block starts unmined (red in the visualization)
-
-2. **Mining Blocks**:
-
-   - Click "Mine Block" on any unmined block
-   - Watch the nonce change as it searches for a valid hash
-   - When successful, the block turns green
-
-3. **Editing Data**:
-
-   - Change the data in any block's text area
-   - Notice how the hash changes immediately
-   - The block becomes invalid until re-mined
-
-4. **Chain Validation**:
-
-   - The chain status shows if all blocks are valid
-   - Invalid blocks are highlighted in red
-   - Previous hash mismatches are visually indicated
-
-5. **Export/Import**:
-   - Save your blockchain state using "Export Chain"
-   - Load a previous state using "Import Chain"
-
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Educational Value
-
-This demo helps understand:
-
-- How blockchains maintain data integrity
-- The role of mining in blockchain security
-- How changes to data affect the entire chain
-- The importance of proper block linking
-- Basic cryptographic concepts (hashing)
-
-## Contributing
-
-Feel free to submit issues and enhancement requests!
