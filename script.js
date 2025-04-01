@@ -11,10 +11,22 @@ document.addEventListener("DOMContentLoaded", () => {
     "network-visualization"
   );
   const networkCanvas = document.getElementById("network-canvas");
+  const difficultySelect = document.getElementById("difficulty-select");
 
-  const difficulty = "00"; // Hash must start with this
+  let difficulty = difficultySelect.value; // Initialize with selected difficulty
   let blockchain = [];
   let miningTimes = []; // Track mining times for statistics
+
+  // Update difficulty when selection changes
+  difficultySelect.addEventListener("change", (e) => {
+    difficulty = e.target.value;
+    // Invalidate all blocks when difficulty changes
+    blockchain.forEach((block) => {
+      block.mined = false;
+      block.updateUI();
+    });
+    validateChain();
+  });
 
   // --- Core Blockchain Logic ---
 

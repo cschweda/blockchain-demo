@@ -64,7 +64,16 @@
         <p>Total Blocks: <span id="total-blocks">0</span></p>
         <p>Average Mining Time: <span id="avg-mining-time">0</span> ms</p>
       </div>
-      <p>Difficulty: Hash must start with "00"</p>
+      <div class="difficulty-control">
+        <label for="difficulty-select">Mining Difficulty:</label>
+        <select id="difficulty-select">
+          <option value="00">Easy (00)</option>
+          <option value="000">Medium (000)</option>
+          <option value="0000">Hard (0000)</option>
+          <option value="00000">Expert (00000)</option>
+        </select>
+        <span class="difficulty-info">More zeros = longer mining time</span>
+      </div>
     </div>
 
     <div id="blockchain">

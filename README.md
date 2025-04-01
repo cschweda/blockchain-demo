@@ -68,19 +68,27 @@ If you encounter issues:
    - Watch the nonce change as it searches for a valid hash
    - When successful, the block turns green
 
-3. **Editing Data**:
+3. **Adjusting Difficulty**:
+
+   - Use the difficulty selector to change mining requirements
+   - Options range from "00" (easy) to "00000" (expert)
+   - More zeros = longer mining time
+   - Changing difficulty invalidates all blocks
+   - Try different difficulties to see how mining time increases exponentially
+
+4. **Editing Data**:
 
    - Change the data in any block's text area
    - Notice how the hash changes immediately
    - The block becomes invalid until re-mined
 
-4. **Chain Validation**:
+5. **Chain Validation**:
 
    - The chain status shows if all blocks are valid
    - Invalid blocks are highlighted in red
    - Previous hash mismatches are visually indicated
 
-5. **Export/Import**:
+6. **Export/Import**:
    - Save your blockchain state using "Export Chain"
    - Load a previous state using "Import Chain"
 
