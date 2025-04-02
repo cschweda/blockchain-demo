@@ -93,7 +93,7 @@ If you encounter issues:
 
 1. **Adding Blocks**:
 
-   - Click the '+' indicator on the last block to add a new block
+   - Click the "Add new block" button on the last block to add a new block
    - Alternatively, use the "Add New Block" button at the top
    - Each block starts unmined (red in the visualization)
 
@@ -102,15 +102,13 @@ If you encounter issues:
    - Click "Mine Block" on any unmined block
    - Watch the nonce change as it searches for a valid hash
    - When successful, the block turns green
-   - The '+' indicator will appear on the last block in the chain
+   - The "Add new block" button will appear on the last block in the chain
 
 3. **Adjusting Difficulty**:
 
-   - Use the difficulty selector to change mining requirements
-   - Options range from "00" (easy) to "000" (hard)
-   - More zeros = longer mining time (each zero makes it 16x harder)
-   - Changing difficulty invalidates all blocks
-   - Try different difficulties to see how mining time increases exponentially
+   - Use the difficulty selector to change mining difficulty
+   - More leading zeros = longer mining time
+   - Each additional zero makes it 16x harder to find a valid hash
 
 4. **Editing Data**:
 
@@ -201,7 +199,7 @@ In blockchain technology, mining is like solving a complex mathematical puzzle. 
 
 #### Mining Time and Difficulty
 
-1. **In Our Demo**:
+1. **In This Demo**:
 
    - We require hashes to start with "00"
    - This is a simplified version of real blockchain difficulty
@@ -238,7 +236,7 @@ In blockchain technology, mining is like solving a complex mathematical puzzle. 
    - This investment makes it costly to attack the network
    - Creates economic incentives for honest behavior
 
-#### Mining in Our Demo vs. Real Blockchains
+#### Mining in This Demo vs. Real Blockchains
 
 1. **Similarities**:
 

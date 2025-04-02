@@ -36,19 +36,26 @@ h1, h2 {
 }
 
 #add-block-btn {
-    padding: 10px 20px;
-    font-size: 1em;
-    cursor: pointer;
-    background-color: #007bff;
+    display: none;
+    margin-left: 8px;
+    padding: 8px 16px;
+    background-color: #28a745;
     color: white;
     border: none;
-    border-radius: 5px;
-    margin-right: 20px;
-    transition: background-color 0.3s ease;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9em;
 }
 
 #add-block-btn:hover {
-    background-color: #0056b3;
+    background-color: #218838;
+    transform: translateY(-1px);
+}
+
+#add-block-btn.visible {
+    display: inline-block;
+    animation: blockAppear 0.5s ease-out;
 }
 
 #chain-status {
@@ -162,7 +169,7 @@ h1, h2 {
 }
 
 .mine-btn {
-    background-color: #007bff;
+    background-color: #dc3545;
     color: white;
     border: none;
     padding: 8px 16px;
@@ -171,9 +178,15 @@ h1, h2 {
     transition: all 0.3s ease;
 }
 
+.mine-btn:hover {
+    background-color: #c82333;
+}
+
 .mine-btn:disabled {
-    background-color: #6c757d;
+    background-color: #e9ecef;
+    color: #adb5bd;
     cursor: not-allowed;
+    opacity: 0.7;
     animation: none;
 }
 
@@ -183,24 +196,6 @@ h1, h2 {
 
 .mine-btn.mining {
     animation: miningPulse 1s infinite;
-}
-
-.add-block-indicator {
-    display: none;
-    margin-left: 8px;
-    color: #28a745;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.add-block-indicator:hover {
-    transform: scale(1.2);
-}
-
-.add-block-indicator.visible {
-    display: inline-block;
-    animation: blockAppear 0.5s ease-out;
 }
 
 /* Tooltip styles */
@@ -545,6 +540,10 @@ div.code-toolbar > .toolbar > .toolbar-item > button:hover {
 
 /* Mining button animation */
 .mine-btn:disabled {
+    background-color: #e9ecef;
+    color: #adb5bd;
+    cursor: not-allowed;
+    opacity: 0.7;
     animation: none;
 }
 
@@ -562,14 +561,30 @@ div.code-toolbar > .toolbar > .toolbar-item > button:hover {
     }
 }
 
+/* Mining Progress Line */
 .mining-progress {
-    height: 3px;
-    background: linear-gradient(90deg, #007bff, #28a745);
-    width: 0%;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    animation: miningProgress 2s linear infinite;
+    display: none;
+}
+
+/* Mining Animation */
+@keyframes mining {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.block.mining {
+    animation: mining 1s infinite;
+}
+
+.block.mining .mining-progress {
+    width: 100%;
 }
 
 /* Network visualization animations */
@@ -622,4 +637,30 @@ div.code-toolbar > .toolbar > .toolbar-item > button:hover {
 #chain-status span.valid,
 #chain-status span.invalid {
     animation: statusUpdate 0.5s ease;
+}
+
+/* Add spinner styles */
+.mining-spinner {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #4CAF50;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    z-index: 1000;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Update button container to handle multiple buttons */
+.button-container {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
 }

@@ -110,12 +110,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const blockElement = document.getElementById(`block-${this.index}`);
       if (blockElement) {
         blockElement.classList.add("mining");
-
-        // Add mining progress bar
-        const progressBar = document.createElement("div");
-        progressBar.className = "mining-progress";
-        blockElement.appendChild(progressBar);
       }
+
+      // Create and add the spinner
+      const spinner = document.createElement("div");
+      spinner.className = "mining-spinner";
+      document.body.appendChild(spinner);
 
       while (hash.substring(0, difficulty.length) !== difficulty) {
         this.nonce++;
@@ -128,14 +128,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const endTime = performance.now();
       miningTimes.push(endTime - startTime);
 
-      // Remove mining animations if block element exists
+      // Remove mining animations and spinner
       if (blockElement) {
         blockElement.classList.remove("mining");
-        const progressBar = blockElement.querySelector(".mining-progress");
-        if (progressBar) {
-          progressBar.remove();
-        }
       }
+      spinner.remove();
 
       this.hash = hash;
       this.mined = true;
@@ -198,13 +195,11 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // Update add block indicator visibility with animation
-      const addBlockIndicator = blockElement.querySelector(
-        ".add-block-indicator"
-      );
+      const addBlockBtn = blockElement.querySelector(".add-block-btn");
       if (this.index === blockchain.length - 1) {
-        addBlockIndicator.classList.add("visible");
+        addBlockBtn.classList.add("visible");
       } else {
-        addBlockIndicator.classList.remove("visible");
+        addBlockBtn.classList.remove("visible");
       }
 
       // Update mine button state with animation
@@ -311,11 +306,11 @@ document.addEventListener("DOMContentLoaded", () => {
               <button class="mine-btn" data-index="${
                 block.index
               }" data-tooltip="Click to find a valid hash by changing the nonce. This process is called 'mining'. The button becomes disabled once mining is complete.">Mine Block</button>
-              <span class="add-block-indicator ${
+              <button class="add-block-btn ${
                 block.index === blockchain.length - 1 ? "visible" : ""
               }" data-index="${
       block.index
-    }" data-tooltip="Add another block">+</span>
+    }" data-tooltip="Add another block">Add new block</button>
             </div>
         `;
 
@@ -323,9 +318,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Add Event Listeners for this specific block
     const dataTextArea = blockElement.querySelector(".block-data");
-    const addBlockIndicator = blockElement.querySelector(
-      ".add-block-indicator"
-    );
+    const addBlockBtn = blockElement.querySelector(".add-block-btn");
 
     // Tooltip management
     let tooltip = null;
@@ -454,7 +447,7 @@ document.addEventListener("DOMContentLoaded", () => {
         mineButton.classList.add("completed");
         // Show the add block indicator if this is the last block or genesis block
         if (index === blockchain.length - 1 || index === 0) {
-          addBlockIndicator.classList.add("visible");
+          addBlockBtn.classList.add("visible");
         }
         // updateUI is called within mineBlock
       } catch (error) {
@@ -464,8 +457,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // Add click handler for the add block indicator
-    addBlockIndicator.addEventListener("click", () => {
+    // Add click handler for the add block button
+    addBlockBtn.addEventListener("click", () => {
       addNewBlock();
     });
 
