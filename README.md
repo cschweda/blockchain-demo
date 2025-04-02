@@ -1,6 +1,6 @@
 # Interactive Blockchain Demo
 
-This is an educational tool to demonstrate how blockchain technology works. It provides a visual, interactive way to understand the core concepts of blockchain, including mining, hashing, and chain validation.
+This is tool to demonstrate how blockchain technology works. It provides a visual, interactive way to understand the core concepts of blockchain, including mining, hashing, and chain validation.
 
 ## Core Computer Science Concepts
 
@@ -179,7 +179,7 @@ Mining is the process of finding a valid hash for a block. Let's break down how 
 
 #### What is Mining?
 
-In blockchain technology, mining is like solving a complex mathematical puzzle. In our demo, the puzzle is simple: find a hash that starts with "00". In real cryptocurrencies like Bitcoin, the puzzle is much more complex, requiring many more leading zeros.
+In blockchain technology, mining is like solving a complex mathematical puzzle. In this demo, the puzzle is simple: find a hash that starts with "00". In real cryptocurrencies like Bitcoin, the puzzle is much more complex, requiring many more leading zeros.
 
 #### How Mining Works
 
@@ -188,7 +188,7 @@ In blockchain technology, mining is like solving a complex mathematical puzzle. 
    - Start with a block containing data, timestamp, and previous block's hash
    - Add a random number (nonce)
    - Calculate the hash of all this information
-   - If the hash doesn't meet the requirements (starts with "00" in our demo), change the nonce and try again
+   - If the hash doesn't meet the requirements (starts with "00" in this demo), change the nonce and try again
    - Keep trying until you find a valid hash
 
 2. **Why It's Hard**:
@@ -245,9 +245,9 @@ In blockchain technology, mining is like solving a complex mathematical puzzle. 
    - Links blocks together securely
 
 2. **Differences**:
-   - Our demo uses a simple "00" requirement
+   - This demo uses a simple "00" requirement
    - Real blockchains use much more complex requirements
-   - Our demo doesn't include rewards or competition
+   - This demo doesn't include rewards or competition
    - Real blockchains have network-wide difficulty adjustment
 
 ## License
