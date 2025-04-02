@@ -556,24 +556,62 @@ fn main() {
       </div>
 
       <div class="math-explanation">
-        <h3>Understanding the Math</h3>
+        <h3>Understanding the Mathematics of Mining</h3>
         <ul>
           <li>
-            <strong>Hash Function:</strong> SHA-256 produces a 256-bit (64
-            character) hexadecimal output
+            <strong>Hash Function (SHA-256):</strong> 
+            <ul>
+              <li>Produces a 256-bit (64 character) hexadecimal output</li>
+              <li>Each character can be 0-9 or a-f (16 possibilities)</li>
+              <li>The output is deterministic but appears random</li>
+              <li>Small input changes create completely different hashes</li>
+            </ul>
           </li>
           <li>
-            <strong>Probability:</strong> Each character in the hash has 16
-            possible values (0-f). The chance of getting a specific character is
-            1/16
+            <strong>Mining Probability:</strong>
+            <ul>
+              <li>Each character position has 1/16 chance of being any specific value</li>
+              <li>For difficulty "00" (2 zeros): (1/16)² = 1/256 chance per attempt</li>
+              <li>For difficulty "000" (3 zeros): (1/16)³ = 1/4,096 chance per attempt</li>
+              <li>For difficulty "0000" (4 zeros): (1/16)⁴ = 1/65,536 chance per attempt</li>
+            </ul>
           </li>
           <li>
-            <strong>Difficulty Calculation:</strong> For a difficulty of "00",
-            the probability is (1/16)² = 1/256. For "000", it's (1/16)³ = 1/4096
+            <strong>Expected Mining Attempts:</strong>
+            <ul>
+              <li>Average attempts needed = 16ⁿ (where n is number of required zeros)</li>
+              <li>For "00": ~256 attempts on average</li>
+              <li>For "000": ~4,096 attempts on average</li>
+              <li>For "0000": ~65,536 attempts on average</li>
+            </ul>
           </li>
           <li>
-            <strong>Expected Attempts:</strong> On average, you need to try 16^n
-            attempts to find a hash with n leading zeros
+            <strong>Real-World Bitcoin Mining:</strong>
+            <ul>
+              <li>Bitcoin requires many more leading zeros (currently ~19-20 zeros)</li>
+              <li>This means approximately 16²⁰ attempts needed!</li>
+              <li>That's why specialized mining hardware (ASICs) is needed</li>
+              <li>The network automatically adjusts difficulty to maintain ~10 minute block times</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Why Mining is Important:</strong>
+            <ul>
+              <li>Creates a "Proof of Work" - shows computational effort was spent</li>
+              <li>Makes it expensive to modify past blocks (would need to re-mine)</li>
+              <li>Difficulty can be adjusted to control block creation rate</li>
+              <li>Creates a fair, decentralized way to agree on blockchain state</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Mining Process Details:</strong>
+            <ul>
+              <li>Block data + nonce + previous hash are combined</li>
+              <li>SHA-256 hash is calculated on this combined data</li>
+              <li>If hash doesn't start with required zeros, increment nonce</li>
+              <li>Process repeats until a valid hash is found</li>
+              <li>This is why mining takes longer with more required zeros</li>
+            </ul>
           </li>
         </ul>
       </div>

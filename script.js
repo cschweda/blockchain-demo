@@ -12,7 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
   );
   const networkCanvas = document.getElementById("network-canvas");
   const difficultySelect = document.getElementById("difficulty-select");
-  const themeToggle = document.getElementById("theme-toggle");
 
   let difficulty = difficultySelect.value; // Initialize with selected difficulty
   let blockchain = [];
@@ -654,7 +653,6 @@ document.addEventListener("DOMContentLoaded", () => {
     );
     const networkCanvas = document.getElementById("network-canvas");
     const difficultySelect = document.getElementById("difficulty-select");
-    const themeToggle = document.getElementById("theme-toggle");
 
     // Initialize variables
     let difficulty = difficultySelect?.value || "000"; // Default to "000" if not found
@@ -690,9 +688,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         validateChain();
       });
-    }
-    if (themeToggle) {
-      themeToggle.addEventListener("click", toggleTheme);
     }
 
     // Initialize network visualization if elements exist

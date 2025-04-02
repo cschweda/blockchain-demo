@@ -1,666 +1,711 @@
+/* Dark theme colors - permanent */
+:root {
+  --bg-color: #1a1a1a;
+  --container-bg: #2d2d2d;
+  --text-color: #e0e0e0;
+  --border-color: #404040;
+  --block-bg: #2d2d2d;
+  --block-border: #404040;
+  --input-bg: #3d3d3d;
+  --input-border: #505050;
+  --hash-bg: #3d3d3d;
+  --tooltip-bg: rgba(255, 255, 255, 0.9);
+  --tooltip-color: #333;
+  --button-bg: #dc3545;
+  --button-hover: #c82333;
+  --button-disabled: #404040;
+  --button-disabled-text: #808080;
+  --valid-bg: #2d2d2d;
+  --valid-border: #4a4a4a;
+  --invalid-bg: #3a1b1b;
+  --invalid-border: #5a2d2d;
+  --explanation-bg: #2d2d2d;
+  --stats-bg: #2d2d2d;
+  --stats-border: #404040;
+  --network-bg: #2d2d2d;
+  --network-border: #404040;
+  --canvas-bg: #1a1a1a;
+  --canvas-border: #404040;
+}
+
 body {
-    font-family: sans-serif;
-    line-height: 1.6;
-    margin: 20px;
-    background-color: #f4f4f4;
+  font-family: sans-serif;
+  line-height: 1.6;
+  margin: 20px;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+/* Remove theme toggle button styles */
+.theme-toggle {
+  display: none;
 }
 
 h1, h2 {
-    text-align: center;
-    color: #333;
+  text-align: center;
+  color: var(--text-color);
 }
 
 #explanation {
-    background-color: #e9e9e9;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
+  background-color: var(--explanation-bg);
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
 }
 
 #explanation ol {
-    padding-left: 20px;
+  padding-left: 20px;
 }
 
 #explanation li {
-    margin-bottom: 8px;
+  margin-bottom: 8px;
 }
 
 .controls {
-    text-align: center;
-    margin-bottom: 25px;
-    padding: 15px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  text-align: center;
+  margin-bottom: 25px;
+  padding: 15px;
+  background-color: var(--container-bg);
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border: 1px solid var(--border-color);
 }
 
 #add-block-btn {
-    display: none;
-    margin-left: 8px;
-    padding: 8px 16px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 0.9em;
+  display: none;
+  margin-left: 8px;
+  padding: 8px 16px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9em;
 }
 
 #add-block-btn:hover {
-    background-color: #218838;
-    transform: translateY(-1px);
+  background-color: #218838;
+  transform: translateY(-1px);
 }
 
 #add-block-btn.visible {
-    display: inline-block;
-    animation: blockAppear 0.5s ease-out;
+  display: inline-block;
+  animation: blockAppear 0.5s ease-out;
 }
 
 #chain-status {
-    display: inline-block;
-    font-weight: bold;
-    padding: 8px 15px;
-    border-radius: 5px;
+  display: inline-block;
+  font-weight: bold;
+  padding: 8px 15px;
+  border-radius: 5px;
 }
 
 #chain-status .valid {
-    color: #28a745;
-    background-color: #e9f7ec;
-    border: 1px solid #a3d8b0;
+  background-color: var(--valid-bg);
+  border: 1px solid var(--valid-border);
 }
 
 #chain-status .invalid {
-    color: #dc3545;
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
+  background-color: var(--invalid-bg);
+  border: 1px solid var(--invalid-border);
 }
 
 #blockchain {
-    display: flex;
-    flex-wrap: wrap; /* Allow blocks to wrap on smaller screens */
-    gap: 15px; /* Space between blocks */
-    justify-content: center; /* Center blocks if they don't fill the width */
-    padding: 10px;
+  display: flex;
+  flex-wrap: wrap; /* Allow blocks to wrap on smaller screens */
+  gap: 15px; /* Space between blocks */
+  justify-content: center; /* Center blocks if they don't fill the width */
+  padding: 10px;
 }
 
 .block {
-    border: 1px solid #ccc;
-    background-color: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    width: 300px; /* Fixed width for consistency */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-    display: flex;
-    flex-direction: column; /* Stack elements vertically */
-    animation: blockAppear 0.5s ease-out;
+  border: 1px solid var(--block-border);
+  background-color: var(--block-bg);
+  padding: 15px;
+  border-radius: 8px;
+  width: 300px; /* Fixed width for consistency */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  display: flex;
+  flex-direction: column; /* Stack elements vertically */
+  animation: blockAppear 0.5s ease-out;
+  color: var(--text-color);
 }
 
 .block.mined {
-    background-color: #e9f7ec; /* Light green for mined */
-    border-color: #a3d8b0;
-    animation: chainUpdate 0.5s ease;
+  background-color: var(--valid-bg);
+  border-color: var(--valid-border);
+  animation: chainUpdate 0.5s ease;
 }
 
 .block.invalid {
-    background-color: #f8d7da; /* Light red for invalid hash */
-    border-color: #f5c6cb;
+  background-color: var(--invalid-bg);
+  border-color: var(--invalid-border);
 }
 
 .block-header {
-    font-weight: bold;
-    margin-bottom: 10px;
-    padding-bottom: 5px;
-    border-bottom: 1px solid #eee;
-    font-size: 1.1em;
-    color: #555;
+  font-weight: bold;
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #eee;
+  font-size: 1.1em;
+  color: #555;
 }
 
 .block label {
-    display: block;
-    margin-top: 10px;
-    margin-bottom: 3px;
-    font-weight: bold;
-    font-size: 0.9em;
-    color: #666;
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 3px;
+  font-weight: bold;
+  font-size: 0.9em;
+  color: #666;
 }
 
 .block textarea,
 .block input[type="number"],
 .block .hash-value,
 .block .prev-hash-value {
-    width: calc(100% - 12px); /* Adjust for padding */
-    padding: 5px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 0.85em;
-    font-family: monospace; /* Good for hashes */
-    word-wrap: break-word; /* Wrap long hashes */
+  width: calc(100% - 12px); /* Adjust for padding */
+  padding: 5px;
+  margin-bottom: 10px;
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-family: monospace; /* Good for hashes */
+  word-wrap: break-word; /* Wrap long hashes */
+  background-color: var(--input-bg);
+  color: var(--text-color);
 }
 
 .block textarea {
-    height: 60px;
-    resize: vertical;
-    font-family: sans-serif; /* Use standard font for data */
+  height: 60px;
+  resize: vertical;
+  font-family: sans-serif; /* Use standard font for data */
 }
 
 .block .hash-value,
 .block .prev-hash-value {
-    background-color: #f8f9fa;
-    min-height: 1.2em; /* Ensure space even if empty */
-    overflow-wrap: break-word;
+  background-color: var(--hash-bg);
+  min-height: 1.2em; /* Ensure space even if empty */
+  overflow-wrap: break-word;
 }
 
 .block .hash-value.invalid,
 .block .prev-hash-value.mismatch {
-     color: #dc3545; /* Red text for invalid/mismatched hashes */
-     font-weight: bold;
+  color: #dc3545; /* Red text for invalid/mismatched hashes */
+  font-weight: bold;
 }
 
 .block .hash-value {
-    transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .block .hash-value.updating {
-    animation: hashUpdate 0.5s ease;
+  animation: hashUpdate 0.5s ease;
 }
 
 .mine-btn {
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.3s ease;
+  background-color: var(--button-bg);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .mine-btn:hover {
-    background-color: #c82333;
+  background-color: var(--button-hover);
 }
 
 .mine-btn:disabled {
-    background-color: #e9ecef;
-    color: #adb5bd;
-    cursor: not-allowed;
-    opacity: 0.7;
-    animation: none;
+  background-color: var(--button-disabled);
+  color: var(--button-disabled-text);
+  cursor: not-allowed;
+  opacity: 0.7;
+  animation: none;
 }
 
 .mine-btn.completed {
-    background-color: #28a745;
+  background-color: #28a745;
 }
 
 .mine-btn.mining {
-    animation: miningPulse 1s infinite;
+  animation: miningPulse 1s infinite;
 }
 
 /* Tooltip styles */
 .tooltip {
-    position: fixed;
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 8px 12px;
-    border-radius: 4px;
-    font-size: 0.9em;
-    pointer-events: none;
-    z-index: 1000;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    max-width: 250px;
-    text-align: left;
-    white-space: normal;
-    line-height: 1.4;
-    margin-top: -15px; /* Move tooltip up slightly */
+  position: fixed;
+  background-color: var(--tooltip-bg);
+  color: var(--tooltip-color);
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  max-width: 250px;
+  text-align: left;
+  white-space: normal;
+  line-height: 1.4;
+  margin-top: -15px; /* Move tooltip up slightly */
 }
 
 .tooltip.visible {
-    opacity: 1;
+  opacity: 1;
 }
 
 /* Add cursor help for elements with tooltips */
 [data-tooltip] {
-    cursor: help;
+  cursor: help;
 }
 
 /* Ensure tooltips don't interfere with button clicks */
 button[data-tooltip] {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 /* Chain stats styling */
 #chain-stats {
-    background-color: #f8f9fa;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 4px;
-    border: 1px solid #dee2e6;
+  background-color: var(--stats-bg);
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 4px;
+  border: 1px solid var(--stats-border);
 }
 
 #chain-stats p {
-    margin: 5px 0;
+  margin: 5px 0;
 }
 
 /* Network visualization */
 #network-visualization {
-    margin-top: 20px;
-    padding: 20px;
-    background-color: #f8f9fa;
-    border-radius: 4px;
-    border: 1px solid #dee2e6;
+  margin-top: 20px;
+  padding: 20px;
+  background-color: var(--network-bg);
+  border-radius: 4px;
+  border: 1px solid var(--network-border);
 }
 
 #network-visualization.hidden {
-    display: none;
+  display: none;
 }
 
 #network-canvas {
-    width: 100%;
-    height: 300px;
-    background-color: white;
-    border: 1px solid #dee2e6;
-    border-radius: 4px;
+  width: 100%;
+  height: 300px;
+  background-color: var(--canvas-bg);
+  border: 1px solid var(--canvas-border);
+  border-radius: 4px;
 }
 
 /* Export/Import buttons */
 #export-chain-btn,
 #import-chain-btn {
-    margin: 0 5px;
-    padding: 8px 16px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+  margin: 0 5px;
+  padding: 8px 16px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 #export-chain-btn:hover,
 #import-chain-btn:hover {
-    background-color: #218838;
+  background-color: #218838;
 }
 
 /* Responsive design improvements */
 @media (max-width: 768px) {
-    .controls {
-        flex-direction: column;
-        align-items: center;
-    }
+  .controls {
+    flex-direction: column;
+    align-items: center;
+  }
 
-    .controls button {
-        margin: 5px 0;
-        width: 100%;
-    }
+  .controls button {
+    margin: 5px 0;
+    width: 100%;
+  }
 
-    #network-visualization {
-        display: none; /* Hide network visualization on mobile */
-    }
+  #network-visualization {
+    display: none; /* Hide network visualization on mobile */
+  }
 }
 
 /* Difficulty selector styling */
 .difficulty-control {
-    margin: 15px 0;
-    padding: 10px;
-    background-color: #f8f9fa;
-    border-radius: 4px;
-    border: 1px solid #dee2e6;
+  margin: 15px 0;
+  padding: 10px;
+  background-color: var(--container-bg);
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
 }
 
 .difficulty-control label {
-    margin-right: 10px;
-    font-weight: bold;
+  margin-right: 10px;
+  font-weight: bold;
+  color: var(--text-color);
 }
 
 .difficulty-control select {
-    padding: 5px;
-    border-radius: 4px;
-    border: 1px solid #ced4da;
-    margin-right: 10px;
-    transition: all 0.3s ease;
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid var(--input-border);
+  margin-right: 10px;
+  transition: all 0.3s ease;
+  background-color: var(--input-bg);
+  color: var(--text-color);
 }
 
 .difficulty-control select:focus {
-    transform: scale(1.02);
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+  transform: scale(1.02);
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
 }
 
 .difficulty-info {
-    color: #6c757d;
-    font-size: 0.9em;
+  color: var(--text-color);
+  font-size: 0.9em;
+  opacity: 0.8;
 }
 
 /* Mining Math Section */
 .mining-math-section {
-    margin-top: 40px;
-    padding: 20px;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 40px;
+  padding: 20px;
+  background-color: var(--container-bg);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .mining-math-section h2 {
-    color: #2c3e50;
-    margin-bottom: 20px;
+  color: var(--text-color);
+  margin-bottom: 20px;
 }
 
 .mining-math-section h3 {
-    color: #34495e;
-    margin: 25px 0 15px;
+  color: var(--text-color);
+  margin: 25px 0 15px;
 }
 
 .mining-math-section h4 {
-    color: #2c3e50;
-    margin: 15px 0 10px;
-    font-size: 1.1em;
+  color: var(--text-color);
+  margin: 15px 0 10px;
+  font-size: 1.1em;
 }
 
 /* Code Examples Section */
 .code-examples {
-    background-color: #1e1e1e;
-    border-radius: 8px;
-    overflow: hidden;
-    margin: 20px 0;
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 20px 0;
 }
 
 .code-examples h3 {
-    color: #e0e0e0;  /* Light gray for high contrast - approximately 13:1 ratio */
-    margin: 0;
-    padding: 20px;
-    background-color: #1e1e1e;
-    font-size: 16px;
-    font-weight: normal;
+  color: #e0e0e0;  /* Light gray for high contrast - approximately 13:1 ratio */
+  margin: 0;
+  padding: 20px;
+  background-color: #1e1e1e;
+  font-size: 16px;
+  font-weight: normal;
 }
 
 .code-tabs {
-    display: flex;
-    background-color: #2d2d2d;
-    border-bottom: 1px solid #3d3d3d;
-    overflow-x: auto;
-    white-space: nowrap;
+  display: flex;
+  background-color: #2d2d2d;
+  border-bottom: 1px solid #3d3d3d;
+  overflow-x: auto;
+  white-space: nowrap;
 }
 
 .tab-button {
-    background: none;
-    border: none;
-    color: #999;
-    padding: 12px 24px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.3s ease;
+  background: none;
+  border: none;
+  color: #999;
+  padding: 12px 24px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
 }
 
 .tab-button:hover {
-    color: #fff;
-    background-color: #3d3d3d;
+  color: #fff;
+  background-color: #3d3d3d;
 }
 
 .tab-button.active {
-    color: #fff;
-    background-color: #1e1e1e;
-    border-bottom: 2px solid #007acc;
+  color: #fff;
+  background-color: #1e1e1e;
+  border-bottom: 2px solid #007acc;
 }
 
 .code-content {
-    display: none;
-    padding: 20px;
-    background-color: #1e1e1e;
+  display: none;
+  padding: 20px;
+  background-color: #1e1e1e;
 }
 
 .code-content.active {
-    display: block;
+  display: block;
 }
 
 /* Prism.js customization */
 pre[class*="language-"] {
-    margin: 0;
-    background-color: #1e1e1e;
-    border-radius: 0;
+  margin: 0;
+  background-color: #1e1e1e;
+  border-radius: 0;
 }
 
 code[class*="language-"] {
-    font-family: 'Consolas', 'Monaco', monospace;
-    font-size: 14px;
-    line-height: 1.5;
+  font-family: 'Consolas', 'Monaco', monospace;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 .token.comment {
-    color: #6a9955;
+  color: #6a9955;
 }
 
 .token.string {
-    color: #ce9178;
+  color: #ce9178;
 }
 
 .token.number {
-    color: #b5cea8;
+  color: #b5cea8;
 }
 
 .token.keyword {
-    color: #569cd6;
+  color: #569cd6;
 }
 
 .token.function {
-    color: #dcdcaa;
+  color: #dcdcaa;
 }
 
 /* Copy button */
 div.code-toolbar > .toolbar {
-    opacity: 1;
-    top: 0.5em;
-    right: 0.5em;
+  opacity: 1;
+  top: 0.5em;
+  right: 0.5em;
 }
 
 div.code-toolbar > .toolbar > .toolbar-item > button {
-    background-color: #3d3d3d;
-    color: #fff;
-    padding: 6px 12px;
-    border-radius: 4px;
-    font-size: 12px;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  background-color: #3d3d3d;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 div.code-toolbar > .toolbar > .toolbar-item > button:hover {
-    background-color: #4d4d4d;
+  background-color: #4d4d4d;
 }
 
 .math-explanation {
-    background-color: white;
-    padding: 20px;
-    border-radius: 6px;
-    margin-top: 30px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background-color: var(--container-bg);
+  padding: 20px;
+  border-radius: 6px;
+  margin-top: 30px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .math-explanation ul {
-    list-style-type: none;
-    padding: 0;
+  list-style-type: none;
+  padding: 0;
 }
 
 .math-explanation li {
-    margin: 10px 0;
-    line-height: 1.6;
+  margin: 10px 0;
+  line-height: 1.6;
+  color: var(--text-color);
 }
 
 .math-explanation strong {
-    color: #2c3e50;
+  color: var(--text-color);
 }
 
 /* Block Animations */
 @keyframes blockAppear {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes miningPulse {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.02);
-    }
-    100% {
-        transform: scale(1);
-    }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 @keyframes hashUpdate {
-    0% {
-        background-color: #fff;
-    }
-    50% {
-        background-color: #e3f2fd;
-    }
-    100% {
-        background-color: #fff;
-    }
+  0% {
+    background-color: #fff;
+  }
+  50% {
+    background-color: #e3f2fd;
+  }
+  100% {
+    background-color: #fff;
+  }
 }
 
 @keyframes chainUpdate {
-    0% {
-        border-color: #a3d8b0;
-    }
-    50% {
-        border-color: #28a745;
-    }
-    100% {
-        border-color: #a3d8b0;
-    }
+  0% {
+    border-color: #a3d8b0;
+  }
+  50% {
+    border-color: #28a745;
+  }
+  100% {
+    border-color: #a3d8b0;
+  }
 }
 
 /* Mining button animation */
 .mine-btn:disabled {
-    background-color: #e9ecef;
-    color: #adb5bd;
-    cursor: not-allowed;
-    opacity: 0.7;
-    animation: none;
+  background-color: var(--button-disabled);
+  color: var(--button-disabled-text);
+  cursor: not-allowed;
+  opacity: 0.7;
+  animation: none;
 }
 
 .mine-btn.mining {
-    animation: miningPulse 1s infinite;
+  animation: miningPulse 1s infinite;
 }
 
 /* Mining progress animation */
 @keyframes miningProgress {
-    0% {
-        width: 0%;
-    }
-    100% {
-        width: 100%;
-    }
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
 }
 
 /* Mining Progress Line */
 .mining-progress {
-    display: none;
+  display: none;
 }
 
 /* Mining Animation */
 @keyframes mining {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.05);
-    }
-    100% {
-        transform: scale(1);
-    }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .block.mining {
-    animation: mining 1s infinite;
+  animation: mining 1s infinite;
 }
 
 .block.mining .mining-progress {
-    width: 100%;
+  width: 100%;
 }
 
 /* Network visualization animations */
 @keyframes nodeAppear {
-    from {
-        opacity: 0;
-        transform: scale(0.8);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes connectionAppear {
-    from {
-        stroke-dasharray: 0 100;
-    }
-    to {
-        stroke-dasharray: 100 0;
-    }
+  from {
+    stroke-dasharray: 0 100;
+  }
+  to {
+    stroke-dasharray: 100 0;
+  }
 }
 
 .network-node {
-    animation: nodeAppear 0.5s ease-out;
+  animation: nodeAppear 0.5s ease-out;
 }
 
 .network-connection {
-    stroke-dasharray: 100;
-    animation: connectionAppear 0.5s ease-out;
+  stroke-dasharray: 100;
+  animation: connectionAppear 0.5s ease-out;
 }
 
 /* Chain status animation */
 @keyframes statusUpdate {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.05);
-    }
-    100% {
-        transform: scale(1);
-    }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 #chain-status span {
-    transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 #chain-status span.valid,
 #chain-status span.invalid {
-    animation: statusUpdate 0.5s ease;
+  animation: statusUpdate 0.5s ease;
 }
 
 /* Add spinner styles */
 .mining-spinner {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    width: 20px;
-    height: 20px;
-    border: 2px solid #f3f3f3;
-    border-top: 2px solid #4CAF50;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    z-index: 1000;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #4CAF50;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  z-index: 1000;
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /* Update button container to handle multiple buttons */
 .button-container {
-    display: flex;
-    gap: 8px;
-    margin-top: 10px;
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
 }
