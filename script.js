@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
   );
   const networkCanvas = document.getElementById("network-canvas");
   const difficultySelect = document.getElementById("difficulty-select");
+  const themeToggle = document.getElementById("theme-toggle");
 
   let difficulty = difficultySelect.value; // Initialize with selected difficulty
   let blockchain = [];
@@ -27,6 +28,46 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     validateChain();
   });
+
+  // --- Tab Functionality ---
+
+  function initializeTabs() {
+    const tabButtons = document.querySelectorAll(".tab-button");
+    const codeContents = document.querySelectorAll(".code-content");
+
+    // Set first tab as active by default
+    if (tabButtons.length > 0 && codeContents.length > 0) {
+      tabButtons[0].classList.add("active");
+      const firstLang = tabButtons[0].getAttribute("data-lang");
+      const firstContent = document.getElementById(firstLang);
+      if (firstContent) {
+        firstContent.classList.add("active");
+      }
+    }
+
+    tabButtons.forEach((button) => {
+      button.addEventListener("click", (e) => {
+        e.preventDefault();
+        const lang = button.getAttribute("data-lang");
+
+        // Remove active class from all tabs and content
+        tabButtons.forEach((btn) => btn.classList.remove("active"));
+        codeContents.forEach((content) => content.classList.remove("active"));
+
+        // Add active class to selected tab and content
+        button.classList.add("active");
+        const contentElement = document.getElementById(lang);
+        if (contentElement) {
+          contentElement.classList.add("active");
+          // Re-highlight the code in the newly activated tab
+          const codeElement = contentElement.querySelector("code");
+          if (codeElement && window.Prism) {
+            Prism.highlightElement(codeElement);
+          }
+        }
+      });
+    });
+  }
 
   // --- Core Blockchain Logic ---
 
@@ -495,10 +536,9 @@ document.addEventListener("DOMContentLoaded", () => {
     return isValid;
   }
 
-  // --- New Features ---
+  // --- Chain Import/Export Functions ---
 
-  // Export chain functionality
-  exportChainBtn.addEventListener("click", () => {
+  function exportChain() {
     const chainData = JSON.stringify(
       blockchain.map((block) => ({
         index: block.index,
@@ -520,88 +560,77 @@ document.addEventListener("DOMContentLoaded", () => {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-  });
+  }
 
-  // Import chain functionality
-  importChainBtn.addEventListener("click", () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = ".json";
-    input.onchange = (e) => {
-      const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        try {
-          const importedChain = JSON.parse(event.target.result);
-          blockchain = importedChain.map((blockData) => {
-            const block = new Block(
-              blockData.index,
-              blockData.timestamp,
-              blockData.data,
-              blockData.previousHash
-            );
-            block.hash = blockData.hash;
-            block.nonce = blockData.nonce;
-            block.mined = blockData.mined;
-            return block;
-          });
+  function importChain(file) {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const importedChain = JSON.parse(event.target.result);
+        blockchain = importedChain.map((blockData) => {
+          const block = new Block(
+            blockData.index,
+            blockData.timestamp,
+            blockData.data,
+            blockData.previousHash
+          );
+          block.hash = blockData.hash;
+          block.nonce = blockData.nonce;
+          block.mined = blockData.mined;
+          return block;
+        });
 
-          // Clear and re-render the blockchain
-          blockchainContainer.innerHTML = "";
-          blockchain.forEach((block) => renderBlock(block));
-          validateChain();
-          updateChainStats();
-          updateNetworkVisualization();
-        } catch (error) {
-          alert("Error importing chain: " + error.message);
-        }
-      };
-      reader.readAsText(file);
+        // Clear and re-render the blockchain
+        blockchainContainer.innerHTML = "";
+        blockchain.forEach((block) => renderBlock(block));
+        validateChain();
+        updateChainStats();
+        updateNetworkVisualization();
+      } catch (error) {
+        alert("Error importing chain: " + error.message);
+      }
     };
-    input.click();
-  });
+    reader.readAsText(file);
+  }
 
   // Network visualization
   function updateNetworkVisualization() {
-    const ctx = networkCanvas.getContext("2d");
-    const width = networkCanvas.width;
-    const height = networkCanvas.height;
+    const canvas = document.getElementById("network-canvas");
+    if (!canvas) return; // Exit if canvas doesn't exist
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return; // Exit if context can't be obtained
 
     // Clear canvas
-    ctx.clearRect(0, 0, width, height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw blocks and connections with animations
+    // Draw nodes and connections
     blockchain.forEach((block, index) => {
-      const x = (width / (blockchain.length + 1)) * (index + 1);
-      const y = height / 2;
+      const x = (index + 1) * (canvas.width / (blockchain.length + 1));
+      const y = canvas.height / 2;
 
-      // Draw block with animation
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.scale(1, 1);
-      ctx.fillStyle = block.mined ? "#28a745" : "#dc3545";
-      ctx.fillRect(-30, -30, 60, 60);
-
-      // Draw block number
-      ctx.fillStyle = "white";
-      ctx.font = "12px Arial";
-      ctx.textAlign = "center";
-      ctx.fillText(block.index, 0, 4);
-      ctx.restore();
-
-      // Draw animated connection to previous block
+      // Draw connection line
       if (index > 0) {
-        const prevX = (width / (blockchain.length + 1)) * index;
         ctx.beginPath();
-        ctx.moveTo(prevX, y);
-        ctx.lineTo(x - 30, y);
-        ctx.strokeStyle =
-          block.previousHash === blockchain[index - 1].hash
-            ? "#28a745"
-            : "#dc3545";
-        ctx.lineWidth = 2;
+        ctx.moveTo(x - canvas.width / (blockchain.length + 1), y);
+        ctx.lineTo(x, y);
+        ctx.strokeStyle = block.mined ? "#4CAF50" : "#FF9800";
         ctx.stroke();
       }
+
+      // Draw node
+      ctx.beginPath();
+      ctx.arc(x, y, 20, 0, Math.PI * 2);
+      ctx.fillStyle = block.mined ? "#4CAF50" : "#FF9800";
+      ctx.fill();
+      ctx.strokeStyle = "#fff";
+      ctx.stroke();
+
+      // Draw block number
+      ctx.fillStyle = "#fff";
+      ctx.font = "12px Arial";
+      ctx.textAlign = "center";
+      ctx.fillText(block.index, x, y + 4);
     });
   }
 
@@ -617,46 +646,89 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // --- Initialization ---
-  addBlockBtn.addEventListener("click", addNewBlock);
-  createGenesisBlock();
 
-  // Initialize network visualization
-  networkVisualizationEl.classList.remove("hidden");
-  networkCanvas.width = networkCanvas.offsetWidth;
-  networkCanvas.height = networkCanvas.offsetHeight;
+  function initializeBlockchain() {
+    // Get DOM elements
+    const blockchainContainer = document.getElementById("blockchain");
+    const addBlockBtn = document.getElementById("add-block-btn");
+    const exportChainBtn = document.getElementById("export-chain-btn");
+    const importChainBtn = document.getElementById("import-chain-btn");
+    const chainStatusEl = document.getElementById("chain-status");
+    const totalBlocksEl = document.getElementById("total-blocks");
+    const avgMiningTimeEl = document.getElementById("avg-mining-time");
+    const networkVisualizationEl = document.getElementById(
+      "network-visualization"
+    );
+    const networkCanvas = document.getElementById("network-canvas");
+    const difficultySelect = document.getElementById("difficulty-select");
+    const themeToggle = document.getElementById("theme-toggle");
 
-  // Handle window resize for network visualization
-  window.addEventListener("resize", () => {
-    networkCanvas.width = networkCanvas.offsetWidth;
-    networkCanvas.height = networkCanvas.offsetHeight;
-    updateNetworkVisualization();
-  });
+    // Initialize variables
+    let difficulty = difficultySelect?.value || "000"; // Default to "000" if not found
+    let blockchain = [];
+    let miningTimes = [];
 
-  // Code tabs functionality
-  const tabButtons = document.querySelectorAll(".tab-button");
-  const codeContents = document.querySelectorAll(".code-content");
+    // Add event listeners if elements exist
+    if (addBlockBtn) {
+      addBlockBtn.addEventListener("click", addNewBlock);
+    }
+    if (exportChainBtn) {
+      exportChainBtn.addEventListener("click", exportChain);
+    }
+    if (importChainBtn) {
+      importChainBtn.addEventListener("click", () => {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = ".json";
+        input.onchange = (e) => {
+          const file = e.target.files[0];
+          importChain(file);
+        };
+        input.click();
+      });
+    }
+    if (difficultySelect) {
+      difficultySelect.addEventListener("change", (e) => {
+        difficulty = e.target.value;
+        // Invalidate all blocks when difficulty changes
+        blockchain.forEach((block) => {
+          block.mined = false;
+          block.updateUI();
+        });
+        validateChain();
+      });
+    }
+    if (themeToggle) {
+      themeToggle.addEventListener("click", toggleTheme);
+    }
 
-  function switchTab(lang) {
-    // Remove active class from all buttons and contents
-    tabButtons.forEach((btn) => btn.classList.remove("active"));
-    codeContents.forEach((content) => content.classList.remove("active"));
+    // Initialize network visualization if elements exist
+    if (networkVisualizationEl && networkCanvas) {
+      networkVisualizationEl.classList.remove("hidden");
+      networkCanvas.width = networkCanvas.offsetWidth;
+      networkCanvas.height = networkCanvas.offsetHeight;
 
-    // Add active class to selected button and content
-    document.querySelector(`[data-lang="${lang}"]`).classList.add("active");
-    document.getElementById(lang).classList.add("active");
+      // Handle window resize for network visualization
+      window.addEventListener("resize", () => {
+        networkCanvas.width = networkCanvas.offsetWidth;
+        networkCanvas.height = networkCanvas.offsetHeight;
+        updateNetworkVisualization();
+      });
+    }
 
-    // Re-trigger Prism highlighting
-    Prism.highlightAll();
+    // Create genesis block
+    createGenesisBlock();
+
+    // Update initial stats
+    updateChainStats();
   }
 
-  // Add click handlers to all tab buttons
-  tabButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const lang = button.getAttribute("data-lang");
-      switchTab(lang);
-    });
-  });
+  // Initialize tabs first
+  initializeTabs();
 
-  // Initial highlighting
+  // Then initialize blockchain
+  initializeBlockchain();
+
+  // Finally highlight code
   Prism.highlightAll();
 });
